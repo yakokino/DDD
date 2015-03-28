@@ -259,6 +259,7 @@ void DDDCard::actionCommand( COMMAND command, int no ){
 						} else {
 							//ƒRƒXƒg‚ª‘«‚è‚È‚¢ê‡
 							cost_enough = 0;
+
 						}
 					}
 				}
