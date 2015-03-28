@@ -116,9 +116,8 @@ int DDDWorld::loadFiles() throw(...){
 
 		//SetTransColor(0,0,0);
 		DDDLoader::setLoadCard( 0 );		//キャラカード用データをセットする
-		for( int i=0 ; i<=60 ; i++ ){
-			int card = load_data.card_no[i];
-			if( card == -1 ) break;
+		for ( auto card : load_data.card_no ) {
+			if ( card == -1 ) break;
 			DDDLoader::setLoadCard( card );		//必要なカードを全てここで読み込む
 		}
 
@@ -154,11 +153,11 @@ void DDDWorld::init(){
 
 	phase = INIT_PHASE;
 	turn_player = 0;
-	for(int i=0 ; i<3 ; i++ ){
-		for(int j=0 ; j<6 ; j++ ){
-			turn_dice[i][j] = SUMMON;
-		}
+	for each (DICE_SYMBOL &dice in turn_dice ) {
+		dice = MOVE;
 	}
+
+
 	scroll = true;
 	camera_x = -300;
 	camera_y = 0;

@@ -4,9 +4,6 @@ PlayerData PlayerDataList::pd[4];
 int PlayerDataList::player_pc;
 
 int PlayerDataList::loadFiles(){
-
-	
-	
 	int last = 0;		//残り処理数
 	int chk;
 	int gh[20];
@@ -27,28 +24,12 @@ void PlayerDataList::init(){
 	name_fh = CreateFontToHandle( 0, 14, 5, DX_FONTTYPE_EDGE);
 }
 
-////デッキデータをセットする（マイダイスデータも含む）
-//void PlayerDataList::setDeck( int pn, DeckData *deck ){
-//	for(int i=0 ; i<3 ; i++ ){
-//		for(int j=0 ; j<6 ; j++ ){
-//			pd[pn].my_dice[i][j] = deck->my_dice[i][j];
-//		}
-//	}
-//	for(int i=0 ; i<60 ; i++ ){
-//		int card_no = deck->card_no[i];
-//		if( card_no == -1 ) return;
-//		pd[pn].deck_num++;
-//		pd[pn].deck_all[i] = card_no;
-//	}
-//}
-
 int PlayerDataList::checkStock( const int p_no, const int *symbol ){
 	for(int i=0 ; i<20 ; i++ ){
 		if( symbol[i] > pd[p_no].p_stock[i] ) return 0;
 	}
 	return 1;
 }
-
 
 void PlayerDataList::draw(){		//とりあえず各プレイヤーの名前を表示
 	int dy = OTHER_PLAYER_DATA_Y;
