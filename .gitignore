@@ -1,0 +1,14 @@
+﻿!.gitignore
+Debug/
+Release/
+*.sdf
+*.opensdf
+*.sln
+*.sup
+*.vcxproj
+*.filters
+*.user
+*.idb
+*.ipch
+*.rej
+Log.txt
