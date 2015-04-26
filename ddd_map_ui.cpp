@@ -126,7 +126,7 @@ void DDDMap::draw(int camera_x, int camera_y){
 	back_anim.draw( 0, 0, 0, 1.1 );
 	//back_anim.draw( 0, -350, -100 );
 	
-	DrawFormatString(230,0,0,"(%2d,%2d)",point_x,point_y);		//とりあえず仮に座標表示
+	DrawFormatString(230,0,0,"(%2d,%2d)",point_x,point_y);		// TODO:消す とりあえず仮に座標表示
 
 	
 	//マップ表示

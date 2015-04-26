@@ -8,7 +8,7 @@ int DDDDice::loadFiles()
 	if ( dice_anim.empty() == 1 ) {
 		DDDLoader::setLoadFile( "Media\\Graphic\\dice.bmp" );
 		chk = DDDLoader::getGraphHandle( "Media\\Graphic\\dice.bmp", 15, 5, 3, 64, 64, gh );
-		if ( chk == -1 ) throw( -4 );						//非同期読み込みがエラーならthrow
+		if ( chk == -1 ) throw( -4 );					//非同期読み込みがエラーならthrow
 		else if ( chk >= 0 ) {							//非同期読み込みが終わっていればアニメーションに追加
 			dice_anim.setImage( SUMMON, gh[0] );		//入れる順に注意
 			dice_anim.setImage( ATTACK, gh[1] );
@@ -31,7 +31,6 @@ void DDDDice::init()
 	for ( auto &d_dice : dicision_dice ) {
 		d_dice = NO_SYMBOL;
 	}
-	int bp = 1;
 }
 
 void DDDDice::setDice( int pn, DeckData *deck )

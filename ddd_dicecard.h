@@ -6,7 +6,8 @@
 #include "player_data.h"
 
 
-class DDDDice{
+class DDDDice
+{
 	//int player_pc;				//このプレイヤーのプレイヤーナンバー
 	bool wait_time;					//trueで処理中を表し、操作できない状態にする
 	DICE_SYMBOL dice_list[4][3][6];	//全ダイス情報[p_no][？個目][面]
@@ -16,14 +17,14 @@ class DDDDice{
 	unsigned int stop_frame;		//ダイスが止められてからのフレーム数を記憶する変数
 	AnimDraw dice_anim;				//ダイス画像
 public:
-	int loadFiles() throw(...);
+	int loadFiles() throw( ... );
 	void init();
 	//void setPlayerPC(int p_no){ player_pc = p_no; }
 	void setDice( int p_no, DeckData *deck );
 	void shuffleDice();				//ダイスをシャッフル状態にする
 	//void setTurnDice( int dice, int men, DICE_SYMBOL sym){ turn_dice[dice][men] = sym; }
-	bool getWaitTime(){ return wait_time; }
-	DICE_SYMBOL getSymbol( int dice ){ return dicision_dice[dice]; }
+	bool getWaitTime() { return wait_time; }
+	DICE_SYMBOL getSymbol( int dice ) { return dicision_dice[dice]; }
 	void actionCommand( COMMAND command, int no );	//コマンド実行
 
 	void draw();
@@ -63,7 +64,8 @@ const int INFO_SKILL_SPACE = 67;
 const int INFO_FLAVOR_X = 12;
 const int INFO_FLAVOR_Y = 580;
 
-struct CardData{
+struct CardData
+{
 	int card_no;				//カードナンバー
 	std::string card_name;		//カードの名前
 	std::string card_spell;		//カード名のふりがな
@@ -79,12 +81,13 @@ struct CardData{
 	std::vector<ActionData> action_list;	//行動データリスト
 	std::string flavor_text;	//フレーバーテクスト
 
-	void init(){
-		for(int i=0 ; i<20 ; i++ ){
+	void init()
+	{
+		for ( int i = 0; i < 20; i++ ) {
 			cost[i] = 0;
 		}
-		for(int i=0 ; i<5 ; i++ ){
-			for(int j=0 ; j<5 ; j++ ){
+		for ( int i = 0; i < 5; i++ ) {
+			for ( int j = 0; j < 5; j++ ) {
 				map[i][j] = MAP_TILE;
 			}
 		}
@@ -101,7 +104,8 @@ struct CardData{
 	}
 };
 
-class DDDCard{
+class DDDCard
+{
 	//int player_pc;				//このプレイヤーのプレイヤーナンバー
 	std::vector<int> deck_list[4];		//全プレイヤーデッキリスト
 	std::vector<int> hand_list[4];		//全プレイヤー手札リスト
@@ -115,7 +119,7 @@ class DDDCard{
 	int select_card;
 	int cost_enough;					//表示用（コストが足りている場合に1が入る）
 
-	
+
 	AnimDraw mini_symbol;
 	AnimDraw chara_map;
 	int info_name_fh;
@@ -123,7 +127,7 @@ class DDDCard{
 	int info_small_fh;
 	int info_mini_fh;
 public:
-	int loadFiles() throw(...);
+	int loadFiles() throw( ... );
 	void init();
 	//void setPlayerPC( int p_no ){ player_pc = p_no; }
 	void setDeck( int pn, DeckData *deck );
@@ -131,11 +135,11 @@ public:
 	void drawCard( int p_no );					//指定したプレイヤーがデッキからカードを1枚ドローする
 	void setCardInfo( int card_no );
 	void setCharactorMap( int x, int y, int spin, int num, ... );
-	void setOperate( bool oper ){ operate = oper; }
+	void setOperate( bool oper ) { operate = oper; }
 
-	int getHand( int p_no ){ return hand_list[p_no].size(); }
-	int getCardPosX( int hand_no ){ return image_x.at( hand_no ); }
-	int getCardPosY( int hand_no ){ return HAND_Y; }
+	int getHand( int p_no ) { return hand_list[p_no].size(); }
+	int getCardPosX( int hand_no ) { return image_x.at( hand_no ); }
+	int getCardPosY( int hand_no ) { return HAND_Y; }
 
 	void getCardData( int card_no, CardData *card_data );		//card_info.cppに記載。カード情報を得る
 
