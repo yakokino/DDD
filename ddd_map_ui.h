@@ -1,7 +1,7 @@
-#ifndef __DDD_MAP_UI_H__
-#define __DDD_MAP_UI_H__
+#pragma once
 
 #include <list>
+#include "ddd_mouse.h"
 #include "card_info.h"
 #include "anim_sound.h"
 
@@ -40,7 +40,7 @@ public:
 	void setPointXY(int camera_x, int camera_y, int mouse_x, int mouse_y);
 	int getPointX(){ return point_x; }
 	int getPointY(){ return point_y; }
-	void actionCommand( COMMAND com, int no = 0 );
+	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
 	void draw(int camera_x, int camera_y);
 };
 
@@ -67,23 +67,17 @@ class DDDUI{
 		WINDOW_TAG tag;
 	};
 	std::vector<WINDOW_DATA> window_list;		//ウィンドウリスト
-	std::vector<COMMAND_DATA> command_list;	//マウスで反応する位置とそのコマンドリスト
+	//std::vector<COMMAND_DATA> command_list;	//マウスで反応する位置とそのコマンドリスト
 	AnimDraw ui_anim;
 	AnimDraw window_anim;
 public:
 	int loadFiles() throw(...);
 	void createWindow( int x, int y, int w, int h ,WINDOW_TYPE type, WINDOW_TAG tag );		//ウィンドウを生成する
 	void deleteWindow( WINDOW_TAG tag );										//ウィンドウを消去する
-	void setCommand( int x, int y, int w, int h, COMMAND com, int no = 0 );		//マウス操作できる位置を追加する
-	void getCommandPos( COMMAND com, int no, int *x, int *y );							//コマンドの位置を取得する
-	void setCommandPos( COMMAND com, int no, int x, int y );							//コマンドの位置をセットする
-	void deleteCommand( COMMAND com );											//コマンドを削除する
-	COMMAND checkCommand( int x, int y, int *no );	//マウスの位置がマウス操作可能な位置かどうかを判断し、コマンドを返す
+	//void setCommand( int x, int y, int w, int h, COMMAND com, int no = 0 );		//マウス操作できる位置を追加する
+	//void getCommandPos( COMMAND com, int no, int *x, int *y );							//コマンドの位置を取得する
+	//void setCommandPos( COMMAND com, int no, int x, int y );							//コマンドの位置をセットする
+	//void deleteCommand( COMMAND com );											//コマンドを削除する
+	//COMMAND checkCommand( int x, int y, int *no );	//マウスの位置がマウス操作可能な位置かどうかを判断し、コマンドを返す
 	void draw( PHASE phase );
 };
-
-
-
-
-
-#endif

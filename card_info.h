@@ -1,29 +1,8 @@
-#ifndef __CARD_INFO_H__
-#define __CARD_INFO_H__
+#pragma once
 
 #include <string>
 
-//マウス操作によるコマンド
-enum COMMAND{
-	NO_COMMAND = -1,
-	MAP_VIEW,
-	DICE_STOP,
-	HAND_CARD,
-	CARD_SELECT,
-	CARD_SUMMON,
-	ATTACK_PHASE_BUTTON,
-	MAIN_PHASE2_BUTTON,
-	END_PHASE_BUTTON
 
-};
-
-//コマンドデータ
-struct COMMAND_DATA{
-	int x1, y1;		//コマンド座標左上
-	int x2, y2;		//コマンド座標右下
-	int no;			//コマンドナンバー（手札の判別やクリック情報が入る）
-	COMMAND command;//コマンド
-};
 
 //マップデータ
 enum MAP_DATA{
@@ -257,6 +236,3 @@ public:
 		}
 	}
 };
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __CHARA_DATA_H__
-#define __CHARA_DATA_H__
+#pragma once
 
 #include "card_info.h"
 #include "anim_sound.h"
@@ -31,5 +30,3 @@ public:
 	int yobi[10];			//パッシブ効果などに使われるの予備変数
 
 };
-
-#endif

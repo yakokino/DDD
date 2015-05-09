@@ -1,10 +1,8 @@
-#ifndef __DDD_LOADERD_H__
-#define __DDD_LOADERD_H__
+#pragma once
 
 #include "DxLib.h"
 #include "anim_sound.h"
 #include <map>
-#include <vector>
 #include <string>
 
 struct CardGraph{
@@ -18,7 +16,7 @@ class DDDLoader{
 	static std::map<std::string, int> name_handle;	//ファイル場所＋ファイル名とイメージハンドル（ghに変換すると0にする）
 	static std::map< int, CardGraph > card_handle;		//カードナンバーとグラフィックハンドル、アニメクラスも含まれる
 public:
-	static int load_rate;		//ロードの進行率
+	static int load_rate;		//TODO:ロジック整理　ロードの進行率
 
 	static int setLoadFile( char *str );			//画像や音楽ファイルなどのファイル名を渡してname_handleに追加する
 	static int getHandle( char *str );				//name_handleに保存されているハンドルを取得する（BMPなどの透明情報は指定しない）
@@ -35,5 +33,3 @@ public:
 	static int getGraphHandle( char *filename, int not_trans = 0 );
 	static int getGraphHandle(char *filename, int AllNum, int XNum, int YNum, int SizeX, int SizeY, int *gh);
 };
-
-#endif

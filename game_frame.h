@@ -1,5 +1,4 @@
-#ifndef __GAME_FRAME_H__
-#define __GAME_FRAME_H__
+#pragma once
 
 #include "DxLib.h"
 #include <string>
@@ -64,7 +63,3 @@ public:
 	virtual void doMainLoop();			//メインループ実行関数
 	static unsigned int getSceneFrame();
 };
-
-//============================================================================================================================
-
-#endif

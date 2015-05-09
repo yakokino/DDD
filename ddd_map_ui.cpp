@@ -46,7 +46,7 @@ void DDDMap::init(){
 		}
 	}
 	map_data[ 0][ 1] = MAP_WAY1;
-	map_data[ 1][ 1] = MAP_WAY1;
+	map_data[ 1][ 1] = MAP_WAY1;													//TODO: 削除
 	map_data[ 9][10] = MAP_WAY1;													//テスト代入(X座標は右側なので注意)
 	map_data[10][10] = MAP_WAY1;
 	map_data[11][10] = MAP_WAY1;
@@ -113,8 +113,9 @@ getpoint:
 	}
 }
 
-void DDDMap::actionCommand( COMMAND com, int no ){
-	if( com == MAP_VIEW ){
+void DDDMap::mouseAction( MOUSE_ACTION_DATA* mouse_data )
+{
+	if( mouse_data->command == MAP_VIEW ){
 		view = true;
 		return;
 	}
@@ -227,71 +228,6 @@ void DDDUI::deleteWindow(WINDOW_TAG tag){
 	}
 }
 
-void DDDUI::setCommand(int x, int y, int w, int h, COMMAND com, int no){
-	COMMAND_DATA command_data;
-	command_data.x1 = x;
-	command_data.y1 = y;
-	command_data.x2 = x + w;
-	command_data.y2 = y + h;
-	command_data.command = com;
-	command_data.no = no;
-	command_list.push_back( command_data );
-}
-
-void DDDUI::deleteCommand( COMMAND com ){
-	std::vector<COMMAND_DATA>::iterator it = command_list.begin();
-	while( it != command_list.end() ){
-		if( (*it).command == com ){
-			it = command_list.erase( it );
-		} else {
-			it++;
-		}
-	}
-
-}
-
-void DDDUI::getCommandPos( COMMAND com, int no, int *x, int *y ){
-	std::vector<COMMAND_DATA>::iterator it = command_list.begin();
-	while( it != command_list.end() ){
-		if( (*it).command == com && (*it).no == no ){
-			*x = (*it).x1;
-			*y = (*it).y1;
-			break;
-		}
-		it++;
-	}
-}
-
-void DDDUI::setCommandPos( COMMAND com, int no, int x, int y ){
-	std::vector<COMMAND_DATA>::iterator it = command_list.begin();
-	while( it != command_list.end() ){
-		if( (*it).command == com && (*it).no == no ){
-			int height = (*it).y2 - (*it).y1;
-			int wide   = (*it).x2 - (*it).x1;
-			(*it).x1 = x;
-			(*it).y1 = y;
-			(*it).x2 = x + wide;
-			(*it).y2 = y + height;
-			break;
-		}
-		it++;
-	}
-}
-
-COMMAND DDDUI::checkCommand(int x, int y, int *no){
-	std::vector<COMMAND_DATA>::iterator it;
-	it = command_list.end();
-	while( it != command_list.begin() ){
-		//リストの後ろからコマンドをチェックする（リストの後ろのほうが優先度が高い）
-		it--;
-		if( (*it).x1 < x && (*it). y1 < y && (*it).x2 > x && (*it).y2 > y ){
-			*no = (*it).no;
-			return (*it).command;		//コマンドが登録されている位置ならばコマンドを返す
-		}
-	}
-	*no = -1;
-	return NO_COMMAND;
-}
 
 
 

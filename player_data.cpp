@@ -19,7 +19,6 @@ int PlayerDataList::loadFiles()
 					symbol_anim.setImage( 1000, gh );	//apidを常にプッシュして追加する為に aoid に 1000 指定
 				}
 				symbol_anim.setLoadFlag( true );
-
 			} else {
 				last++;									//非同期読み込み中なら残り処理＋１
 			}

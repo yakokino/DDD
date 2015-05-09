@@ -1,9 +1,9 @@
-#ifndef __DDD_H__
-#define __DDD_H__
+#pragma once
 
 #include "ddd_loader.h"
-#include "ddd_map_ui.h"
 #include "card_info.h"
+#include "ddd_mouse.h"
+#include "ddd_map_ui.h"
 #include "player_data.h"
 #include "ddd_dicecard.h"
 
@@ -18,44 +18,27 @@ public:
 	
 };
 
-//マウス関連
-enum MOUSE_CLICK{
-	LEFT_CLICK,
-	RIGHT_CLICK,
-	MIDDLE_CLICK
-
-};
-
 class DDDWorld{
 	PlayerDataList player;			//プレイヤーデータリスト
-	DDDDice ddd_dice;
-	DDDCard ddd_card;
-	DDDUI ddd_ui;
-	//int player_pc;
+	DDDMouse ddd_mouse;				//マウスクラス
+	DDDDice ddd_dice;				//ダイスクラス
+	DDDCard ddd_card;				//カードクラス
+	DDDUI ddd_ui;					//UIクラス
+	DDDMap ddd_map;					//マップクラス
+	DDDChara ddd_chara;				//キャラクラス
+	//int player_pc;	//TODO:整理
 	int turn_player;				//ターンプレイヤーナンバー（0～3(1～4Pを表す)）
 	PHASE phase;					//現在のフェイズ
 	PHASE next_phase;				//次のフェイズ（通常NO_PHASEを入れ、フェイズを変更する時に変更先を代入）
 	DICE_SYMBOL turn_dice[3][6];	//このターンのダイス情報
-	DDDMap ddd_map;					//マップデータ
-	DDDChara ddd_chara;				//キャラデータ
 
 	unsigned int phase_frame;
-	//カメラ操作用
+	//TODO: カメラ系はUIに入れたほうがいいかも　カメラ操作用
 	bool scroll;		//trueでスクロール許可
 	int camera_x, camera_y;
-	int lclick_x, lclick_y;		//前フレームのマウス座標
 
-	//マウスチェック用
-	int nx, ny;						//現在のポインタ位置
-	int click_x,click_y;			//クリック開始時の位置
-	bool drag;						//trueでドラッグ中を示す
-	unsigned int pressed_frame[3];	//押されているフレーム数
-	int mouse_wheel;				//マウスホイール回転量（前フレームとの差）
-	COMMAND push_com;				//クリックされた時のコマンド
-	int push_no;					//クリックされた時のコマンドナンバー
-
-	void mouseCheck();				//毎フレーム呼んでマウス情報を入力する関数
-	void actionCommand(COMMAND com, int no);
+	//void mouseCheck();				//毎フレーム呼んでマウス情報を入力する関数
+	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
 
 public:
 	DDDWorld(){
@@ -69,10 +52,10 @@ public:
 		scroll = true;
 		camera_x = -300;
 		camera_y = 0;
-		drag = false;
-		pressed_frame[0] = 0;
-		pressed_frame[1] = 0;
-		pressed_frame[2] = 0;
+		//drag = false;
+		//pressed_frame[0] = 0;
+		//pressed_frame[1] = 0;
+		//pressed_frame[2] = 0;
 
 
 	}
@@ -82,5 +65,3 @@ public:
 	void phaseControl();
 	void draw();
 };
-
-#endif

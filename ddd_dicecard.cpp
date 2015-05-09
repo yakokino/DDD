@@ -50,11 +50,11 @@ void DDDDice::shuffleDice()
 }
 
 
-void DDDDice::actionCommand( COMMAND command, int no )
+void DDDDice::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 {
-	if ( command == DICE_STOP ) {
+	if ( mouse_data->command == DICE_STOP ) {
 		//ダイスロール
-		if ( no == 2101 ) {
+		if ( mouse_data->phase == DICEROLL_PHASE && mouse_data->action == LEFT_CLICK ) {
 			int player_pc = PlayerDataList::getPlayerPC();
 			if ( dice_shuffle == false ) return;
 			dicision_dice[0] = dice_list[player_pc][0][GetRand( 5 )];
@@ -240,25 +240,20 @@ void DDDCard::setCharactorMap( int x, int y, int spin, int num, ... )
 	va_end( list );
 }
 
-void DDDCard::actionCommand( COMMAND command, int no )
+void DDDCard::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 {
-	if ( command == HAND_CARD ) {
+	if ( mouse_data->command == HAND_CARD ) {
 		//カード関連
-		int type = no / 1000;
-		int phase = ( no % 1000 ) / 100;
-		int card = no % 100;
-		over_card = card;
-		setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( card ) );
-		if ( type == 0 ) {
+		over_card = mouse_data->command_no;
+		setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( mouse_data->command_no ) );	//カードインフォをセット
+		if ( mouse_data->action == OVER ) {
 			//手札にマウスオーバー
-		} else  if ( type == 1 ) {
-			//手札クリック
-			int test = 5;
-
-		} else if ( type == 2 ) {
-			//手札をクリックして同じ場所で離した
+		} else  if ( mouse_data->action == LEFT_PUSH_DOWN ) {
+			//手札プッシュダウン
+		} else if ( mouse_data->command == LEFT_CLICK ) {
+			//手札をクリック（同じコマンド場所で離した）
 			if ( operate ) {
-				if ( phase == MAIN_PHASE ) {
+				if ( mouse_data->phase == MAIN_PHASE ) {
 					if ( select_card != over_card ) {
 						select_card = over_card;		//選択カードを代入
 						if ( PlayerDataList::checkStock( PlayerDataList::getPlayerPC(), card_info_data.cost ) == 1 ) {
@@ -298,8 +293,8 @@ void DDDCard::draw()
 		//画像表示
 		if ( card_info_data.c_type == CHARACTOR ) {		//キャラカードだったら縮小表示
 			//SetDrawMode( DX_DRAWMODE_BILINEAR );
-			x2 *= INFO_REDUCE;
-			y2 *= INFO_REDUCE;
+			x2 = (int)( x2 * INFO_REDUCE );
+			y2 = (int)( y2 * INFO_REDUCE );
 			DrawGraph( 0, 0, DDDLoader::getCardHandle( 0 ), TRUE );
 			DrawExtendGraph( 0, 0, x2, y2, DDDLoader::getCardHandle( card_info_no ), TRUE );
 		} else {
@@ -415,8 +410,8 @@ void DDDCard::draw()
 		( *pos_it ) += (int)( dis * FRICTION );
 		GetGraphSize( DDDLoader::getCardHandle( ( *hand_it ) ), &wide, &height );
 		int image_y = HAND_Y;
-		x2 = ( *pos_it ) + ( CARD_W  * REDUCE );
-		y2 = HAND_Y + ( CARD_H * REDUCE );
+		x2 = (int)( ( *pos_it ) + ( CARD_W  * REDUCE ) );
+		y2 = (int)( HAND_Y + ( CARD_H * REDUCE ) );
 		if ( over_card == count ) {	//マウスオーバーされてる手札は位置をずらす
 			image_y -= 20;
 			y2 -= 20;

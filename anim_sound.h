@@ -1,5 +1,4 @@
-#ifndef __ANIMDRAW_H__
-#define __ANIMDRAW_H__
+#pragma once
 
 #include <vector>
 #include "DxLib.h"
@@ -47,5 +46,3 @@ public:
 	static void stop( int snum );			//í‚é~
 	static void playbgm( int snum );		//BGMÇÃçƒê∂
 };
-
-#endif

@@ -1,5 +1,5 @@
-#ifndef __PLAYER_DATA_H__
-#define __PLAYER_DATA_H__
+#pragma once
+
 #include <string>
 #include "chara_data.h"
 
@@ -49,6 +49,3 @@ public:
 	void draw();
 
 };
-
-
-#endif

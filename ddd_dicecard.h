@@ -1,5 +1,6 @@
-#ifndef __DDD_DICECARD_H__
-#define __DDD_DICECARD_H__
+#pragma once
+
+#include "ddd_mouse.h"
 #include "card_info.h"
 #include "anim_sound.h"
 #include "ddd_loader.h"
@@ -25,7 +26,7 @@ public:
 	//void setTurnDice( int dice, int men, DICE_SYMBOL sym){ turn_dice[dice][men] = sym; }
 	bool getWaitTime() { return wait_time; }
 	DICE_SYMBOL getSymbol( int dice ) { return dicision_dice[dice]; }
-	void actionCommand( COMMAND command, int no );	//コマンド実行
+	void mouseAction( MOUSE_ACTION_DATA* mouse_data );	//コマンド実行
 
 	void draw();
 };
@@ -42,8 +43,8 @@ const double FRICTION = 0.2;	//手札の減速率
 const double REDUCE = 0.4;		//手札のカードの画像縮小率
 const double INFO_REDUCE = 0.5;	//キャラカードだった時のインフォカード縮小率
 
-const int HAND_CARD_W = CARD_W * REDUCE;
-const int HAND_CARD_H = CARD_H * REDUCE;
+const int HAND_CARD_W = (int)(CARD_W * REDUCE);
+const int HAND_CARD_H = (int)(CARD_H * REDUCE);
 
 const int INFO_NAME_CX = 125;		//カードインフォの名前表示位置
 const int INFO_NAME_Y = 294;
@@ -137,15 +138,13 @@ public:
 	void setCharactorMap( int x, int y, int spin, int num, ... );
 	void setOperate( bool oper ) { operate = oper; }
 
-	int getHand( int p_no ) { return hand_list[p_no].size(); }
+	int getHand( int p_no ) { return hand_list[p_no].size(); }	//指定したプレイヤーのハンド（手札）数を得る
 	int getCardPosX( int hand_no ) { return image_x.at( hand_no ); }
 	int getCardPosY( int hand_no ) { return HAND_Y; }
 
 	void getCardData( int card_no, CardData *card_data );		//card_info.cppに記載。カード情報を得る
 
-	void actionCommand( COMMAND command, int no );
+	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
 	void draw();
 
 };
-
-#endif
