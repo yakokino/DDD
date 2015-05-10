@@ -5,13 +5,18 @@
 
 void DDDWorld::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 {
-	if ( mouse_data->phase != MAIN_PHASE ) return;	//TODO: UIクラスに入れるべき？
 	if ( mouse_data->command == ATTACK_PHASE_BUTTON ) {
-		next_phase = ATTACK_PHASE;
+		if ( mouse_data->action == LEFT_CLICK ) {
+			next_phase = ATTACK_PHASE;
+		}
 	} else if ( mouse_data->command == MAIN_PHASE2_BUTTON ) {
-		next_phase = MAIN_PHASE2;
+		if ( mouse_data->action == LEFT_CLICK ) {
+			next_phase = MAIN_PHASE2;
+		}
 	} else if ( mouse_data->command == END_PHASE_BUTTON ) {
-		next_phase = END_PHASE;
+		if ( mouse_data->action == LEFT_CLICK ) {
+			next_phase = END_PHASE;
+		}
 	}
 }
 
@@ -83,10 +88,11 @@ void DDDWorld::init()
 
 	phase = INIT_PHASE;
 	turn_player = 0;
-	for each ( DICE_SYMBOL dice in turn_dice )
-	{
+	for each ( DICE_SYMBOL dice in turn_dice ) {
 		dice = MOVE;
 	}
+	mouse_data = ddd_mouse.getMouseAct();
+	camera_data = ddd_map.getCameraData();
 
 	phase_frame = 0;
 	GetMouseWheelRotVol();	//ホイール回転量リセット
@@ -239,14 +245,14 @@ void DDDWorld::draw()
 	ddd_mouse.getInput();		//最初にマウス情報更新
 
 	//構造体ポインタを使ってマウスアクション関数に渡す引数を軽く
-	MOUSE_ACTION_DATA* mouse_data = ddd_mouse.getMouseAct();
 	mouse_data->phase = phase;
+	mouseAction( mouse_data );
 	ddd_card.mouseAction( mouse_data );
 	ddd_dice.mouseAction( mouse_data );
 	//ddd_chara.mouseAction( mouse_data );
 	ddd_map.mouseAction( mouse_data );
 
-	auto camera_data = ddd_map.getCameraData();
+	camera_data = ddd_map.getCameraData();
 	
 
 	ddd_map.draw();		//マップ表示

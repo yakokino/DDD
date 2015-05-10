@@ -32,9 +32,11 @@ class DDDWorld{
 	PHASE next_phase;				//次のフェイズ（通常NO_PHASEを入れ、フェイズを変更する時に変更先を代入）
 	DICE_SYMBOL turn_dice[3][6];	//このターンのダイス情報
 
+	MOUSE_ACTION_DATA* mouse_data;
+	CAMERA_DATA* camera_data;
+
 	unsigned int phase_frame;
 
-	//void mouseCheck();				//毎フレーム呼んでマウス情報を入力する関数
 	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
 
 public:

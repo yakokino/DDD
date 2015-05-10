@@ -25,22 +25,21 @@ const int PHASE_POSY = 400;
 const int PHASE_SPACE = 64;		//フェイズボタンの（左右）間隔
 
 
+struct CAMERA_DATA
+{
+	int nx, ny;
+	bool enable_scroll;
+};
 
 class DDDMap
 {
 	MAP_DATA map_data[DDDMAP_H][DDDMAP_W];		//マップデータ（メモリ仕様上[H],[W]の順で確保）
 	int point_x, point_y;		//マウスポインタのマップ座標
-	//bool view;					//コマンドがMAP_VIEWかどうか
 	int select_col;
 	AnimDraw back_anim;
 	AnimDraw map_anim;
 	AnimDraw mini_map;
 
-	struct CAMERA_DATA
-	{
-		int nx, ny;
-		bool enable_scroll;
-	};
 	CAMERA_DATA camera_data;
 
 public:
