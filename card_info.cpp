@@ -16,7 +16,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			
 			ad.skill_name = "マグロたたき";
 			ad.skill_info = "まぐろで叩きます。テスト的に色々書いてます。色々種類はあるけれど、やっぱりおすすめは大間産です。まぐろたべたい。焼いても生でもとてもおいしいのです。4行目はどうかしら";
-			ad.cost[ATTACK] = 1;	ad.cost[MOVE] = 1;		ad.d_type = DAMAGE;
+			ad.cost.symbol[ATTACK] = 1;	ad.cost.symbol[MOVE] = 1;		ad.d_type = DAMAGE;
 			ad.power = 1500;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 1;	ad.no_range = 0;	ad.t_type = ENEMY_SIMPLE;
 			ad.delay = 0;
@@ -24,7 +24,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.init();
 			ad.skill_name = "クール・ボイス";
 			ad.skill_info = "自分含め、周囲3マス内の味方キャラの攻撃力を500上げる";
-			ad.cost[SPECIAL] = 2;	ad.d_type = ATTACK_UP;
+			ad.cost.symbol[SPECIAL] = 2;	ad.d_type = ATTACK_UP;
 			ad.power = 500;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 3;	ad.no_range = -1;	ad.t_type = FRIEND_ALL;
 			ad.delay = 0;
@@ -32,7 +32,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.init();
 			ad.skill_name = "ハスキー・ボイス";
 			ad.skill_info = "周囲3マス内の敵キャラの攻撃力を1000下げる";
-			ad.cost[SPECIAL] = 2;	ad.d_type = DEFENSE_DOWN;
+			ad.cost.symbol[SPECIAL] = 2;	ad.d_type = DEFENSE_DOWN;
 			ad.power = 500;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 3;	ad.no_range = -1;	ad.t_type = FRIEND_ALL;
 			ad.delay = 0;
@@ -47,7 +47,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			setCharactorMap(2, 3, 0, 3, UP, UP, UP);
 			ad.skill_name = "2000デバッグアタック";
 			ad.skill_info = "通常ダメージ";
-			ad.cost[ATTACK] = 1;
+			ad.cost.symbol[ATTACK] = 1;
 			ad.power = 2000;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 2;	ad.no_range = 0;	ad.t_type = ENEMY_SIMPLE;
 			ad.delay = 0;
@@ -63,7 +63,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			setCharactorMap(2, 3, 0, 7, UP, UP, UP, P0_RIGHT, RIGHT, P0_LEFT, LEFT);
 			ad.skill_name = "2001デバッグアタック";
 			ad.skill_info = "通常ダメージ";
-			ad.cost[ATTACK] = 3;
+			ad.cost.symbol[ATTACK] = 3;
 			ad.power = 2001;		ad.combo = 2;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 1;	ad.no_range = 0;	ad.t_type = ENEMY_SIMPLE;
 			ad.delay = 0;

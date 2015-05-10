@@ -4,6 +4,29 @@
 
 
 
+const int SYMBOL_TYPE_NUM = 6;	//ダイスシンボル数(-1)
+
+//ダイスシンボルの種類(種類の増減時は上記のシンボル数も変更すること)
+enum DICE_SYMBOL
+{
+	NO_SYMBOL = -1,	//ダイス管理用
+	SUMMON = 0,		//召喚
+	ATTACK,			//物理攻撃
+	SPECIAL,		//特殊攻撃
+	MOVE,			//移動
+	MONEY,			//お金
+
+	PIETY,			//信仰心（東方）
+	MAGIC_STONE,	//魔法石（パズドラ）
+
+};
+
+//シンボルデータ
+struct SYMBOL_DATA
+{
+	int symbol[ SYMBOL_TYPE_NUM ];	//[SUMMON] == 1で召喚紋章1必要
+};
+
 //マップデータ
 enum MAP_DATA{
 	MAP_TILE,
@@ -15,20 +38,6 @@ enum MAP_DATA{
 enum CSTATE{
 	CSTATE_NORMAL,	//状態異常なし
 	CSTATE_POIZON,	//毒
-};
-
-//ダイスシンボル
-enum DICE_SYMBOL{
-	NO_SYMBOL = -1,	//ダイス管理用
-	SUMMON = 0,		//召喚
-	ATTACK,			//物理攻撃
-	SPECIAL,		//特殊攻撃
-	MOVE,			//移動
-	MONEY,			//お金
-
-	PIETY,			//信仰心（東方）
-	MAGIC_STONE,	//魔法石（パズドラ）
-
 };
 
 //デッキデータ
@@ -164,7 +173,7 @@ enum T_TYPE{
 struct ActionData{
 	std::string skill_name;		//技名
 	std::string skill_info;		//技の説明文
-	int cost[20];	//コスト[SUMMON]==2 で召喚紋章2コスト
+	SYMBOL_DATA cost;	//コスト[SUMMON]==2 で召喚紋章2コスト
 	S_TYPE s_type;	//効果分類
 	D_TYPE d_type;	//ダメージタイプ
 	int power;		//攻撃力
@@ -178,8 +187,8 @@ struct ActionData{
 
 	
 	void init(){
-		for(int i=0 ; i<20 ; i++ ){
-			cost[i] = 0;
+		for ( int &c : cost.symbol ) {
+			c = 0;
 		}
 		s_type = ACTIVE;
 		d_type = DAMAGE;
@@ -204,12 +213,6 @@ enum PHASE{
 	MAIN_PHASE2,
 	END_PHASE
 
-};
-
-//コストデータ
-struct SYMBOL_DATA
-{
-	int symbol[20];	//[SUMMON] == 1で召喚紋章1必要
 };
 
 //一人のプレイヤーが持つデータ

@@ -53,7 +53,7 @@ void PlayerDataList::draw()
 			DrawFormatStringToHandle( PLAYER_DATA_X, PLAYER_DATA_Y, GetColor( 255, 255, 255 ), name_fh, "%s", pd[i].p_name.c_str() );
 			//クレストプール表示
 			int px = PLAYER_DATA_X + 2;
-			for ( int j = 0; j < 20; j++ ) {
+			for ( int j = 0; j < SYMBOL_TYPE_NUM; j++ ) {
 				for ( int k = 0; k < pd[i].p_stock.symbol[j]; k++ ) {
 					symbol_anim.draw( j, px, PLAYER_DATA_Y + 40 );
 					px += 32;

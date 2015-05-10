@@ -346,10 +346,10 @@ void DDDCard::draw()
 		while ( it != card_info_data.action_list.end() ) {
 			//‹ZƒRƒXƒg•\¦
 			c = 0;
-			for ( int i = 0; i < 20; i++ ) {
-				if ( ( *it ).cost[i] != 0 ) {
-					for ( int j = 0; j < ( *it ).cost[i]; j++ ) {
-						mini_symbol.draw( i, INFO_SKILL_X + c * 16, INFO_SKILL_Y + count * 67, 0.5 );
+			for ( int one_cost : ( *it ).cost.symbol ) {
+				if ( one_cost > 0 ) {
+					for ( int j = 0; j < one_cost; j++ ) {
+						mini_symbol.draw( one_cost, INFO_SKILL_X + c * 16, INFO_SKILL_Y + count * 67, 0.5 );
 						c++;
 					}
 				}
@@ -396,8 +396,8 @@ void DDDCard::draw()
 
 	//èD•\¦
 	//SetDrawMode( DX_DRAWMODE_BILINEAR );
-	auto hand_it = hand_list[PlayerDataList::getPlayerPC()].begin();
-	auto pos_it = image_x.begin();
+	std::vector<int>::iterator  hand_it = hand_list[PlayerDataList::getPlayerPC()].begin();
+	std::vector<int>::iterator  pos_it = image_x.begin();
 	int count = 0;
 	while ( hand_it != hand_list[PlayerDataList::getPlayerPC()].end() ) {
 		//èD‚ÌˆÚ“®ˆ—
