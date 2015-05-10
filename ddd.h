@@ -33,9 +33,6 @@ class DDDWorld{
 	DICE_SYMBOL turn_dice[3][6];	//このターンのダイス情報
 
 	unsigned int phase_frame;
-	//TODO: カメラ系はUIに入れたほうがいいかも　カメラ操作用
-	bool scroll;		//trueでスクロール許可
-	int camera_x, camera_y;
 
 	//void mouseCheck();				//毎フレーム呼んでマウス情報を入力する関数
 	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
@@ -49,13 +46,9 @@ public:
 				turn_dice[i][j] = SUMMON;
 			}
 		}
-		scroll = true;
-		camera_x = -300;
-		camera_y = 0;
-		//drag = false;
-		//pressed_frame[0] = 0;
-		//pressed_frame[1] = 0;
-		//pressed_frame[2] = 0;
+		//scroll = true;
+		//camera_x = -300;
+		//camera_y = 0;
 
 
 	}

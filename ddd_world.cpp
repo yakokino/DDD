@@ -88,10 +88,6 @@ void DDDWorld::init()
 		dice = MOVE;
 	}
 
-
-	scroll = true;
-	camera_x = -300;
-	camera_y = 0;
 	phase_frame = 0;
 	GetMouseWheelRotVol();	//ホイール回転量リセット
 }
@@ -250,10 +246,11 @@ void DDDWorld::draw()
 	//ddd_chara.mouseAction( mouse_data );
 	ddd_map.mouseAction( mouse_data );
 
-	ddd_map.setPointXY( camera_x, camera_y, ddd_mouse.getNowX(), ddd_mouse.getNowY() );	//マウスポインタの位置をマップ座標に変換
+	auto camera_data = ddd_map.getCameraData();
+	
 
-	ddd_map.draw( camera_x, camera_y );		//マップ表示
-	ddd_chara.draw( camera_x, camera_y );	//キャラ表示
+	ddd_map.draw();		//マップ表示
+	ddd_chara.draw( camera_data->nx, camera_data->ny );	//キャラ表示
 	ddd_ui.draw( phase );					//UI表示
 	player.draw();							//プレイヤー情報表示
 	ddd_card.draw();						//カード表示

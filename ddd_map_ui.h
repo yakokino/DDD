@@ -26,58 +26,70 @@ const int PHASE_SPACE = 64;		//フェイズボタンの（左右）間隔
 
 
 
-class DDDMap{
+class DDDMap
+{
 	MAP_DATA map_data[DDDMAP_H][DDDMAP_W];		//マップデータ（メモリ仕様上[H],[W]の順で確保）
 	int point_x, point_y;		//マウスポインタのマップ座標
-	bool view;					//コマンドがMAP_VIEWかどうか
+	//bool view;					//コマンドがMAP_VIEWかどうか
 	int select_col;
 	AnimDraw back_anim;
 	AnimDraw map_anim;
 	AnimDraw mini_map;
+
+	struct CAMERA_DATA
+	{
+		int nx, ny;
+		bool enable_scroll;
+	};
+	CAMERA_DATA camera_data;
+
 public:
-	int loadFiles() throw(...);
+	int loadFiles() throw( ... );
 	void init();
-	void setPointXY(int camera_x, int camera_y, int mouse_x, int mouse_y);
-	int getPointX(){ return point_x; }
-	int getPointY(){ return point_y; }
+	void setPointXY( int mouse_x, int mouse_y );
+	int getPointX() { return point_x; }
+	int getPointY() { return point_y; }
 	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
-	void draw(int camera_x, int camera_y);
+
+	void setEnableScroll( bool enable_flag ) { camera_data.enable_scroll = enable_flag; }
+	CAMERA_DATA* getCameraData() { return &camera_data; }
+
+	void draw();
 };
 
 
 
 
 //ウィンドウタイプ
-enum WINDOW_TYPE{
+enum WINDOW_TYPE
+{
 	NORMAL_WINDOW,
 	POPUP_WINDOW
 };
 
 //ウィンドウ識別タグ
-enum WINDOW_TAG{
+enum WINDOW_TAG
+{
 	DICE_ROLL_WINDOW,
 	YES_NO_WINDOW
 };
 
 
-class DDDUI{
-	struct WINDOW_DATA{
+class DDDUI
+{
+	struct WINDOW_DATA
+	{
 		int x, y, h_num, w_num;
 		WINDOW_TYPE type;
 		WINDOW_TAG tag;
 	};
 	std::vector<WINDOW_DATA> window_list;		//ウィンドウリスト
-	//std::vector<COMMAND_DATA> command_list;	//マウスで反応する位置とそのコマンドリスト
 	AnimDraw ui_anim;
 	AnimDraw window_anim;
+
 public:
-	int loadFiles() throw(...);
-	void createWindow( int x, int y, int w, int h ,WINDOW_TYPE type, WINDOW_TAG tag );		//ウィンドウを生成する
+	int loadFiles() throw( ... );
+	void createWindow( int x, int y, int w, int h, WINDOW_TYPE type, WINDOW_TAG tag );		//ウィンドウを生成する
 	void deleteWindow( WINDOW_TAG tag );										//ウィンドウを消去する
-	//void setCommand( int x, int y, int w, int h, COMMAND com, int no = 0 );		//マウス操作できる位置を追加する
-	//void getCommandPos( COMMAND com, int no, int *x, int *y );							//コマンドの位置を取得する
-	//void setCommandPos( COMMAND com, int no, int x, int y );							//コマンドの位置をセットする
-	//void deleteCommand( COMMAND com );											//コマンドを削除する
-	//COMMAND checkCommand( int x, int y, int *no );	//マウスの位置がマウス操作可能な位置かどうかを判断し、コマンドを返す
 	void draw( PHASE phase );
 };

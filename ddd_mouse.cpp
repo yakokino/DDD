@@ -2,7 +2,7 @@
 
 void DDDMouse::getInput()
 {
-	GetMousePoint( &nx, &ny );					//ポインタ位置取得
+	GetMousePoint( &mouse_data.nx, &mouse_data.ny );					//ポインタ位置取得
 	mouse_wheel = GetMouseWheelRotVol();		//マウスホイール回転量取得
 
 	int input = GetMouseInput();
@@ -27,77 +27,80 @@ void DDDMouse::getInput()
 		if ( pressed_frames[MOUSE_MIDDLE] > 0 ) pressed_frames[MOUSE_MIDDLE] = 0;
 		pressed_frames[MOUSE_MIDDLE]--;
 	}
-	dis_x = lclick_x - nx;
-	dis_y = lclick_y - ny;
-	lclick_x = nx;
-	lclick_y = ny;
-	checkMouseState();
+	mouse_data.dis_x = lclick_x - mouse_data.nx;
+	mouse_data.dis_y = lclick_y - mouse_data.ny;
+	lclick_x = mouse_data.nx;
+	lclick_y = mouse_data.ny;
+
+	checkCommand();		//mouse_dataのcommandとnoを代入
+	checkMouseState();	//mouse_dataのaction等を代入
+}
+
+void DDDMouse::checkCommand()
+{
+	std::vector<COMMAND_DATA>::iterator it;
+	it = command_list.end();
+	while ( it != command_list.begin() ) {
+		//リストの後ろからコマンドをチェックする（リストの後ろのほうが優先度が高い）
+		it--;
+		if ( ( *it ).x1 < mouse_data.nx && ( *it ).y1 < mouse_data.ny && ( *it ).x2 > mouse_data.nx && ( *it ).y2 > mouse_data.ny ) {
+			mouse_data.command_no = ( *it ).no;
+			mouse_data.command = ( *it ).command;		//コマンドが登録されている位置ならばコマンドを返す
+			return;
+		}
+	}
+	mouse_data.command_no = -1;
+	mouse_data.command = NO_COMMAND;
 }
 
 void DDDMouse::checkMouseState()
 {
-	mouse_act_data.command = checkCommand( nx, ny, &mouse_act_data.command_no );
-
 	if ( pressed_frames[MOUSE_LEFT] == 1 ) {
 
-		click_x = nx;	//クリック開始時のポインタ位置
-		click_y = ny;
+		click_x = mouse_data.nx;	//クリック開始時のポインタ位置
+		click_y = mouse_data.ny;
 
-		push_com = mouse_act_data.command;	//マウス左ボタンプッシュダウンされた場所のコマンドとコマンドナンバーを記憶する
-		push_no = mouse_act_data.command_no;
+		mouse_data.push_command = mouse_data.command;	//マウス左ボタンプッシュダウンされた場所のコマンドとコマンドナンバーを記憶する
+		mouse_data.push_no = mouse_data.command_no;
 
 		//プッシュダウンアクション
-		mouse_act_data.action = LEFT_PUSH_DOWN;
+		mouse_data.action = LEFT_PUSH_DOWN;
 
 		//ddd_dice.actionCommand( push_com, 1000 + phase * 100 + no );		//プッシュダウンされたらナンバーに1000足してコマンド実行
 		//ddd_card.actionCommand( push_com, 1000 + phase * 100 + no );
 		//actionCommand( push_com, 1000 + no );
 
 	} else if ( pressed_frames[MOUSE_LEFT] > 1 ) {
-		mouse_act_data.action = LEFT_DRAG;
+		mouse_data.action = LEFT_DRAG;
 	} else if ( pressed_frames[MOUSE_LEFT] == -1 ) {
-		if ( push_com != NO_COMMAND && push_com == mouse_act_data.command && push_no == mouse_act_data.command_no ) {
+		if ( mouse_data.push_command != NO_COMMAND && mouse_data.push_command == mouse_data.command && mouse_data.push_no == mouse_data.command_no ) {
 			//マウス左ボタンが離された時、クリックされた時のコマンドと一致しているなら
 
 			//クリックアクション実行
-			mouse_act_data.action = LEFT_CLICK;
+			mouse_data.action = LEFT_CLICK;
 
 			//ddd_dice.actionCommand( push_com, 2000 + phase * 100 + no );			//ナンバーに2000足してコマンド実行
 			//ddd_card.actionCommand( push_com, 2000 + phase * 100 + no );
 			//actionCommand( push_com, 2000 + no );
 		} else {
-			mouse_act_data.action = LEFT_PUSH_UP;
+			mouse_data.action = LEFT_PUSH_UP;
 		}
+		mouse_data.push_command = NO_COMMAND;
 
 	} else if ( pressed_frames[MOUSE_RIGHT] == 1 ) {
-		mouse_act_data.action = RIGHT_PUSH_DOWN;
+		mouse_data.action = RIGHT_PUSH_DOWN;
 	} else if ( pressed_frames[MOUSE_RIGHT] > 1 ) {
-		mouse_act_data.action = RIGHT_DRAG;
+		mouse_data.action = RIGHT_DRAG;
 	} else if ( pressed_frames[MOUSE_RIGHT] == -1 ) {
-		mouse_act_data.action = RIGHT_PUSH_UP;
+		mouse_data.action = RIGHT_PUSH_UP;
 	} else {												//TODO:中クリックの追記
-		mouse_act_data.action = OVER;
+		mouse_data.action = OVER;
 	}
 	//ddd_map.actionCommand( ncom );
 	//ddd_dice.actionCommand( ncom, phase * 100 + no );						//マウスオーバーされた時にナンバーそのままでコマンド実行
 	//ddd_card.actionCommand( ncom, phase * 100 + no );
 	//actionCommand( push_com, no );
-
-
-	/*
-	if ( push_com == MAP_VIEW ) {
-	//TODO:整理　ドラッグによるマップスクロール（仮）
-	if ( pressed_frames[LEFT_CLICK] > 0 && scroll == true ) {
-	int dis_x = lclick_x - nx;
-	int dis_y = lclick_y - ny;
-	lclick_x = nx;
-	lclick_y = ny;
-	camera_x += dis_x;
-	camera_y += dis_y;
-	}
-	}
-	*/
-
+	
 }
 
 
@@ -155,20 +158,3 @@ void DDDMouse::setCommandPos( COMMAND com, int no, int x, int y )
 		it++;
 	}
 }
-
-COMMAND DDDMouse::checkCommand( int x, int y, int *no )
-{
-	std::vector<COMMAND_DATA>::iterator it;
-	it = command_list.end();
-	while ( it != command_list.begin() ) {
-		//リストの後ろからコマンドをチェックする（リストの後ろのほうが優先度が高い）
-		it--;
-		if ( ( *it ).x1 < x && ( *it ).y1 < y && ( *it ).x2 > x && ( *it ).y2 > y ) {
-			*no = ( *it ).no;
-			return ( *it ).command;		//コマンドが登録されている位置ならばコマンドを返す
-		}
-	}
-	*no = -1;
-	return NO_COMMAND;
-}
-

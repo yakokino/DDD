@@ -47,10 +47,14 @@ enum MOUSE_ACTION
 //マウスアクションを実行する為に渡す情報
 struct MOUSE_ACTION_DATA
 {
-	MOUSE_ACTION action;
+	int nx, ny;			//現在のポインタ位置
+	int dis_x, dis_y;
+	MOUSE_ACTION action;	//クリックされた、ドラッグ中などのアクション
 	COMMAND command;
 	int command_no;
-	PHASE phase;		//マウスアクション引数の都合上ここにもフェイズ情報を入れる
+	COMMAND push_command;			//プッシュダウンされた時のコマンド
+	int push_no;					//プッシュダウンされた時のコマンドナンバー
+	PHASE phase;		//マウスアクション引数の数の都合上ここにもフェイズ情報を入れる
 };
 
 
@@ -67,44 +71,33 @@ struct COMMAND_DATA
 
 class DDDMouse
 {
-	int nx, ny;						//現在のポインタ位置
 	int click_x, click_y;			//クリック開始時の位置
 	int lclick_x, lclick_y;			//前フレームのマウス座標
-	int dis_x, dis_y;				//前フレームとの差
 	int pressed_frames[3];			//それぞれのマウスボタンが押されているフレーム数
 	int mouse_wheel;				//マウスホイール回転量（前フレームとの差）
-	COMMAND push_com;				//プッシュダウンされた時のコマンド
-	int push_no;					//プッシュダウンされた時のコマンドナンバー
-	//COMMAND ncom;					//現在のコマンド
-	//int nno;						//現在のコマンドナンバー
-	//MOUSE_ACTION mouse_act;			//マウスアクション（クリック、ドラッグなど）
-	MOUSE_ACTION_DATA mouse_act_data;
+	MOUSE_ACTION_DATA mouse_data;
 
 	std::vector<COMMAND_DATA> command_list;	//マウスで反応する位置とそのコマンドリスト
 
-	void checkMouseState();
+	void checkCommand();	//ポインタ位置がマウス操作可能な位置かどうかを判定し、mouse_dataにcommand、noを代入
+	void checkMouseState();	//mouse_dataのactionなどを代入
 
 public:
 	DDDMouse()
 	{
-		GetMousePoint( &nx, &ny );
-		click_x = nx; click_y = ny;
+		GetMousePoint( &mouse_data.nx, &mouse_data.ny );
+		click_x = mouse_data.nx; click_y = mouse_data.ny;
 		for ( auto &init_frame : pressed_frames ) {
 			init_frame = 0;
 		}
 		mouse_wheel = 0;
-		push_com = NO_COMMAND;
-		push_no = 0;
+		mouse_data.push_command = NO_COMMAND;
+		mouse_data.push_no = 0;
 	}
 	void getInput();				//毎フレーム呼んでマウス入力情報を取得する関数
 	void setCommand( int x, int y, int w, int h, COMMAND com, int no = 0 );		//マウス操作できる位置を追加する
 	void getCommandPos( COMMAND com, int no, int *x, int *y );							//コマンドの位置を取得する
 	void setCommandPos( COMMAND com, int no, int x, int y );							//コマンドの位置をセット（変更）する
 	void deleteCommand( COMMAND com );											//コマンドを削除する
-	COMMAND checkCommand( int x, int y, int *no );	//マウスの位置がマウス操作可能な位置かどうかを判定し、コマンドを返す
-	int getNowX() { return nx; }		//現在のポインタ位置を得る
-	int getNowY() { return ny; }
-	int getDisX() { return dis_x; }		//ポインタ位置の前フレームとの差を得る
-	int getDisY() { return dis_y; }
-	MOUSE_ACTION_DATA* getMouseAct() { return &mouse_act_data; }
+	MOUSE_ACTION_DATA* getMouseAct() { return &mouse_data; }
 };

@@ -47,6 +47,11 @@ void DDDMap::init()
 			map_data[i][j] = MAP_TILE;
 		}
 	}
+
+	camera_data.nx = -300;	//TODO:自分エリア位置によって初期化位置を変更する必要あり
+	camera_data.ny = 0;
+	camera_data.enable_scroll = false;
+
 	map_data[0][1]   = MAP_WAY1;
 	map_data[1][1]   = MAP_WAY1;													//TODO: 削除
 	map_data[9][10]  = MAP_WAY1;													//テスト代入(X座標は右側なので注意)
@@ -57,73 +62,67 @@ void DDDMap::init()
 	map_data[10][9]  = MAP_WAY1;
 	map_data[0][9]   = MAP_WAY1;
 
-	map_data[13][5] = MAP_WAY1;
+	map_data[13][5]  = MAP_WAY1;
 
-	view = false;
 }
 
-void DDDMap::setPointXY( int camera_x, int camera_y, int mouse_x, int mouse_y )
+void DDDMap::setPointXY( int mouse_x, int mouse_y )
 {
+	//ポインタ位置情報更新
+	int cx = ( DDDMAP_W - 1 )*MAPTILE_HW - ( DDDMAP_H - 1 )*MAPTILE_HW - camera_data.nx;
+	int cy = ( DDDMAP_W - 1 )*MAPTILE_HH + ( DDDMAP_H - 1 )*MAPTILE_HH - camera_data.ny + MAPTILE_HH + MAPTILE_UPSPACE;
+	int tmp = (int)( MAPTILE_S * ( mouse_x - cx ) );
+	int tmp1 = -tmp + cy;
+	int tmp2 = tmp + cy - MAPTILE_H;
+	int tmp3 = tmp1;
+	int tmp4 = tmp2;
 
-	bool map_out = false;
-	if ( view == false ) {
-		map_out = true;		//MAP_VIEWコマンドでなければマップ外情報を入力
-	} else {
-		//ポインタ位置情報更新
-		int cx = ( DDDMAP_W - 1 )*MAPTILE_HW - ( DDDMAP_H - 1 )*MAPTILE_HW - camera_x;
-		int cy = ( DDDMAP_W - 1 )*MAPTILE_HH + ( DDDMAP_H - 1 )*MAPTILE_HH - camera_y + MAPTILE_HH + MAPTILE_UPSPACE;
-		int tmp = (int)( MAPTILE_S * ( mouse_x - cx ) );
-		int tmp1 = -tmp + cy;
-		int tmp2 = tmp + cy - MAPTILE_H;
-		int tmp3 = tmp1;
-		int tmp4 = tmp2;
-
-		point_x = -1;
-		point_y = -1;
-		for ( int k = DDDMAP_H; k >= 0; k-- ) {
-			for ( int j = DDDMAP_W; j >= 0; j-- ) {
-				if ( k != DDDMAP_H && j != DDDMAP_W && map_data[k][j] != MAP_TILE ) {
-					cx = j*MAPTILE_HW - k*MAPTILE_HW - camera_x;
-					cy = j*MAPTILE_HH + k*MAPTILE_HH - camera_y + MAPTILE_HH + MAPTILE_UPSPACE;
-					if ( mouse_x > cx && mouse_x < cx + MAPTILE_W ) {
-						tmp3 -= 4;
-						tmp4 -= 4;
-					} else {
-						continue;
-					}
-				}
-				if ( ( mouse_y >= tmp3 - ( DDDMAP_W - 1 - j ) * MAPTILE_H ) && ( mouse_y >= tmp4 - ( DDDMAP_H - 1 - k ) * MAPTILE_H ) ) {
-					point_x = j;
-					point_y = k;
-					k = 0;		//多重ループを抜ける為終了条件を偽装
-					break;
+	point_x = -1;
+	point_y = -1;
+	for ( int k = DDDMAP_H; k >= 0; k-- ) {
+		for ( int j = DDDMAP_W; j >= 0; j-- ) {
+			if ( k != DDDMAP_H && j != DDDMAP_W && map_data[k][j] != MAP_TILE ) {
+				cx = j*MAPTILE_HW - k*MAPTILE_HW - camera_data.nx;
+				cy = j*MAPTILE_HH + k*MAPTILE_HH - camera_data.ny + MAPTILE_HH + MAPTILE_UPSPACE;
+				if ( mouse_x > cx && mouse_x < cx + MAPTILE_W ) {
+					tmp3 -= 4;	//タイルが盛り上がっている文のpx数
+					tmp4 -= 4;	//TODO:定数化
 				} else {
-					tmp3 = tmp1;
-					tmp4 = tmp2;
+					continue;
 				}
 			}
-		}
-		if ( point_x >= DDDMAP_W || point_y >= DDDMAP_H ) {
-			map_out = true;		//下側にマップ外ならマップ外情報を入力
+			if ( ( mouse_y >= tmp3 - ( DDDMAP_W - 1 - j ) * MAPTILE_H ) && ( mouse_y >= tmp4 - ( DDDMAP_H - 1 - k ) * MAPTILE_H ) ) {
+				point_x = j;
+				point_y = k;
+				k = 0;		//多重ループを抜ける為終了条件を偽装
+				break;
+			} else {
+				tmp3 = tmp1;
+				tmp4 = tmp2;
+			}
 		}
 	}
-	if ( map_out == true ) {
-		//マップ外ならば(-1,-1)にする
-		point_x = -1;
+	if ( point_x >= DDDMAP_W || point_y >= DDDMAP_H ) {
+		point_x = -1;		//下側にマップ外ならマップ外情報を入力
 		point_y = -1;
 	}
 }
 
 void DDDMap::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 {
-	if( mouse_data->command == MAP_VIEW ){
-		view = true;
-		return;
+	if ( mouse_data->push_command == MAP_VIEW && mouse_data->action == LEFT_DRAG ) {
+		camera_data.nx += mouse_data->dis_x;	//カメラスクロール
+		camera_data.ny += mouse_data->dis_y;
 	}
-	view = false;
+	if ( mouse_data->command == MAP_VIEW ) {
+		setPointXY( mouse_data->nx, mouse_data->ny );	//ポインタ座標をマップ座標へ変換
+	} else {
+		point_x = -1;
+		point_y = -1;
+	}
 }
 
-void DDDMap::draw( int camera_x, int camera_y )
+void DDDMap::draw()
 {
 	//背景表示
 	back_anim.draw( 0, 0, 0, 1.1 );
@@ -135,13 +134,13 @@ void DDDMap::draw( int camera_x, int camera_y )
 	//マップ表示
 	for ( int i = 0; i < DDDMAP_H; i++ ) {
 		for ( int j = 0; j < DDDMAP_W; j++ ) {
-			int kx = j*MAPTILE_HW - i*MAPTILE_HW - camera_x;
-			int ky = j*MAPTILE_HH + i*MAPTILE_HH - camera_y;
+			int kx = j*MAPTILE_HW - i*MAPTILE_HW - camera_data.nx;
+			int ky = j*MAPTILE_HH + i*MAPTILE_HH - camera_data.ny;
 			if ( map_data[i][j] == MAP_TILE ) {
-				SetDrawBlendMode( DX_BLENDMODE_ALPHA, 80 );
+				SetDrawBlendMode( DX_BLENDMODE_ALPHA, 80 );		//TODO:透明度定数化
 			}
 			if ( point_x == j && point_y == i ) {
-				SetDrawBright( 50, 150, 255 );
+				SetDrawBright( 50, 150, 255 );		//TODO:色透明度定数化
 			}
 			map_anim.draw( map_data[i][j], kx, ky );
 			SetDrawBlendMode( DX_BLENDMODE_NOBLEND, 0 );
@@ -152,13 +151,13 @@ void DDDMap::draw( int camera_x, int camera_y )
 	//ミニマップ表示
 	for ( int i = 0; i < DDDMAP_H; i++ ) {
 		for ( int j = 0; j < DDDMAP_W; j++ ) {
-			mini_map.draw( map_data[i][j], 920 + j * 5 - i * 5, 520 + j * 3 + i * 3 );
+			mini_map.draw( map_data[i][j], 920 + j * 5 - i * 5, 520 + j * 3 + i * 3 );	//TODO:ミニマップ表示位置定数化
 		}
 	}
 
 	//ミニマップエリア表示
-	int x = 920 + (int)( ( (double)camera_x ) / 9.6 );
-	int y = 520 - 1 + (int)( ( (double)camera_y ) / 8.2 );
+	int x = 920 + (int)( ( (double)camera_data.nx ) / 9.6 );		//TODO:縮小率定数化
+	int y = 520 - 1 + (int)( ( (double)camera_data.ny ) / 8.2 );
 	DrawBox( x, y, x + 106, y + 80, GetColor( 255, 0, 0 ), FALSE );
 
 }
@@ -167,9 +166,6 @@ void DDDMap::draw( int camera_x, int camera_y )
 
 int DDDUI::loadFiles()
 {
-
-
-
 	int last = 0;		//残り処理数
 	int chk;
 	int gh[18];
@@ -203,7 +199,6 @@ int DDDUI::loadFiles()
 	return last;
 
 }
-
 
 void DDDUI::createWindow( int x, int y, int w, int h, WINDOW_TYPE type, WINDOW_TAG tag )
 {
@@ -242,9 +237,7 @@ void DDDUI::draw( PHASE phase )
 			phase == ATTACK_PHASE && ( i == MAIN_PHASE2 || i == END_PHASE ) ||
 			phase == MAIN_PHASE2 && i == END_PHASE || phase == i ) {
 			SetDrawBlendMode( DX_BLENDMODE_NOBLEND, 0 );
-		}
-
-		else {
+		} else {
 			SetDrawBlendMode( DX_BLENDMODE_ALPHA, PHASE_ALPHA );
 		}
 		ui_anim.draw( i + 1, PHASE_POSX + i * PHASE_SPACE, PHASE_POSY );
