@@ -1,8 +1,5 @@
 #include "ddd.h"
 
-
-
-
 void DDDWorld::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 {
 	if ( mouse_data->command == ATTACK_PHASE_BUTTON ) {
@@ -173,8 +170,6 @@ void DDDWorld::phaseControl()
 			//フェイズボタンのコマンド配置
 			ddd_mouse.setCommand( PHASE_POSX + ATTACK_PHASE * PHASE_SPACE, PHASE_POSY, 43, 28, ATTACK_PHASE_BUTTON );
 			ddd_mouse.setCommand( PHASE_POSX + END_PHASE * PHASE_SPACE, PHASE_POSY, 43, 28, END_PHASE_BUTTON );
-			//カード操作可能フラグをたてる
-			ddd_card.setOperate( true );
 		}
 		if ( next_phase == ATTACK_PHASE ) {
 			ddd_mouse.deleteCommand( ATTACK_PHASE_BUTTON );

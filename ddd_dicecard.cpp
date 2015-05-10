@@ -245,25 +245,20 @@ void DDDCard::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 	if ( mouse_data->command == HAND_CARD ) {
 		//カード関連
 		over_card = mouse_data->command_no;
-		setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( mouse_data->command_no ) );	//カードインフォをセット
 		if ( mouse_data->action == OVER ) {
 			//手札にマウスオーバー
-		} else  if ( mouse_data->action == LEFT_PUSH_DOWN ) {
-			//手札プッシュダウン
-		} else if ( mouse_data->command == LEFT_CLICK ) {
-			//手札をクリック（同じコマンド場所で離した）
-			if ( operate ) {
-				if ( mouse_data->phase == MAIN_PHASE ) {
-					if ( select_card != over_card ) {
-						select_card = over_card;		//選択カードを代入
-						if ( PlayerDataList::checkStock( PlayerDataList::getPlayerPC(), card_info_data.cost ) == 1 ) {
-							//コストが足りる場合
-							cost_enough = 1;
-						} else {
-							//コストが足りない場合
-							cost_enough = 0;
-
-						}
+			setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( mouse_data->command_no ) );	//カードインフォをセット
+		} else if ( mouse_data->action == LEFT_CLICK ) {
+			//手札をクリック
+			if ( mouse_data->phase == MAIN_PHASE || mouse_data->phase == MAIN_PHASE2 ) {
+				if ( select_card != over_card ) {
+					select_card = over_card;		//選択カードを代入
+					if ( PlayerDataList::isEnoughSymbol( PlayerDataList::getPlayerPC(), &card_info_data.cost_data ) == 1 ) {
+						//コストが足りる場合
+						cost_enough = 1;
+					} else {
+						//コストが足りない場合
+						cost_enough = 0;
 					}
 				}
 			}
@@ -303,8 +298,8 @@ void DDDCard::draw()
 		//召喚、発動コスト表示
 		int c = 0;
 		for ( int i = 0; i < 20; i++ ) {
-			if ( card_info_data.cost[i] != 0 ) {
-				for ( int j = 0; j < card_info_data.cost[i]; j++ ) {
+			if ( card_info_data.cost_data.symbol[i] != 0 ) {
+				for ( int j = 0; j < card_info_data.cost_data.symbol[i]; j++ ) {
 					mini_symbol.draw( i, 5 + c * 16, 5, 0.5 );
 					c++;
 				}
@@ -401,8 +396,8 @@ void DDDCard::draw()
 
 	//手札表示
 	//SetDrawMode( DX_DRAWMODE_BILINEAR );
-	std::vector<int>::iterator hand_it = hand_list[PlayerDataList::getPlayerPC()].begin();
-	std::vector<int>::iterator pos_it = image_x.begin();
+	auto hand_it = hand_list[PlayerDataList::getPlayerPC()].begin();
+	auto pos_it = image_x.begin();
 	int count = 0;
 	while ( hand_it != hand_list[PlayerDataList::getPlayerPC()].end() ) {
 		//手札の移動処理

@@ -3,14 +3,14 @@
 
 void DDDCard::getCardData( int card_no, CardData *cd){
 	ActionData ad;
-	(*cd).init();
+	//(*cd).init();
 	ad.init();
 	(*cd).action_list.clear();
 	(*cd).card_no = card_no;
 	switch( card_no ){
 		case 2100:
 			(*cd).card_name = "バイリンガル・巡音ルカ";	(*cd).card_spell = "めぐりねるか";	(*cd).c_type = CHARACTOR;
-			(*cd).cost[SUMMON] = 3;		(*cd).life = 5000;		(*cd).defense = 1000;	(*cd).speed = 3;		(*cd).m_type = WALK;
+			(*cd).cost_data.symbol[SUMMON] = 3;		(*cd).life = 5000;		(*cd).defense = 1000;	(*cd).speed = 3;		(*cd).m_type = WALK;
 			(*cd).genre = TOHO;			(*cd).race = HUMAN;
 			setCharactorMap(2, 3, 0, 8, P0_UP, UP, P1_RIGHT, P2_RIGHT, P2_UP, P1_LEFT, P3_LEFT, P3_UP );
 			
@@ -43,7 +43,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 
 		case 2000:
 			(*cd).card_name = "2000";	(*cd).card_spell = "にせん";	(*cd).c_type = CHARACTOR;
-			(*cd).cost[SUMMON] = 2;		(*cd).life = 2000;		(*cd).defense = 200;	(*cd).speed = 2;
+			( *cd ).cost_data.symbol[SUMMON] = 2;		( *cd ).life = 2000;		( *cd ).defense = 200;	( *cd ).speed = 2;
 			setCharactorMap(2, 3, 0, 3, UP, UP, UP);
 			ad.skill_name = "2000デバッグアタック";
 			ad.skill_info = "通常ダメージ";
@@ -59,7 +59,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 
 		case 2001:
 			(*cd).card_name = "2001";	(*cd).card_spell = "にせんいち";	(*cd).c_type = CHARACTOR;
-			(*cd).cost[SUMMON] = 1;		(*cd).cost[SPECIAL] = 1;	(*cd).life = 2000;		(*cd).defense = 200;	(*cd).speed = 1;
+			( *cd ).cost_data.symbol[SUMMON] = 1;		( *cd ).cost_data.symbol[SPECIAL] = 1;	( *cd ).life = 2000;		( *cd ).defense = 200;	( *cd ).speed = 1;
 			setCharactorMap(2, 3, 0, 7, UP, UP, UP, P0_RIGHT, RIGHT, P0_LEFT, LEFT);
 			ad.skill_name = "2001デバッグアタック";
 			ad.skill_info = "通常ダメージ";

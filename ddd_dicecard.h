@@ -65,12 +65,22 @@ const int INFO_SKILL_SPACE = 67;
 const int INFO_FLAVOR_X = 12;
 const int INFO_FLAVOR_Y = 580;
 
+enum CARD_OPERATE_MODE
+{
+	CARD_OPERATE_MODE_NO_OPERATE,
+	CARD_OPERATE_MODE_MAIN_PHASE,
+	CARD_OPERATE_MODE_ATTACK_PHASE,
+	CARD_OPERATE_MODE_MAIN_PHASE_2,
+	CARD_OPERATE_MODE_END_PHASE
+};
+
+
 struct CardData
 {
 	int card_no;				//カードナンバー
 	std::string card_name;		//カードの名前
 	std::string card_spell;		//カード名のふりがな
-	int cost[20];				//召喚、発動コストcost[SUMMON]==1で召喚紋章1必要
+	SYMBOL_DATA cost_data;		//召喚、発動コストcost[SUMMON]==1で召喚紋章1必要
 	int map[5][5];				//作るマップ（X座標は右側なので注意　キャラカード限定？）
 	C_TYPE c_type;				//カードタイプ
 	RACE race;					//種族（キャラカード限定）
@@ -82,15 +92,13 @@ struct CardData
 	std::vector<ActionData> action_list;	//行動データリスト
 	std::string flavor_text;	//フレーバーテクスト
 
-	void init()
+	CardData()
 	{
-		for ( int i = 0; i < 20; i++ ) {
-			cost[i] = 0;
+		for ( int &c: cost_data.symbol) {
+			c = 0;
 		}
-		for ( int i = 0; i < 5; i++ ) {
-			for ( int j = 0; j < 5; j++ ) {
-				map[i][j] = MAP_TILE;
-			}
+		for each ( int &m in map) {
+			m = MAP_TILE;
 		}
 		card_name = "NO_NAME";
 		card_spell = "のーねーむ";
@@ -107,7 +115,6 @@ struct CardData
 
 class DDDCard
 {
-	//int player_pc;				//このプレイヤーのプレイヤーナンバー
 	std::vector<int> deck_list[4];		//全プレイヤーデッキリスト
 	std::vector<int> hand_list[4];		//全プレイヤー手札リスト
 	std::vector<int> dust_list[4];		//全プレイヤー捨て札リスト
@@ -116,10 +123,9 @@ class DDDCard
 	int card_info_no;					//現在のカードインフォに表示しているカードナンバー
 	CardData card_info_data;			//カードインフォのカードデータ
 
-	bool operate;						//操作可能フラグ（trueで操作可能）
+	CARD_OPERATE_MODE mode;						//操作可能フラグ（trueで操作可能）
 	int select_card;
 	int cost_enough;					//表示用（コストが足りている場合に1が入る）
-
 
 	AnimDraw mini_symbol;
 	AnimDraw chara_map;
@@ -130,13 +136,12 @@ class DDDCard
 public:
 	int loadFiles() throw( ... );
 	void init();
-	//void setPlayerPC( int p_no ){ player_pc = p_no; }
 	void setDeck( int pn, DeckData *deck );
 	void deckShuffle( int p_no );				//指定したプレイヤーのデッキをシャッフルする
 	void drawCard( int p_no );					//指定したプレイヤーがデッキからカードを1枚ドローする
 	void setCardInfo( int card_no );
 	void setCharactorMap( int x, int y, int spin, int num, ... );
-	void setOperate( bool oper ) { operate = oper; }
+	void setOperate( CARD_OPERATE_MODE new_mode ) { mode = new_mode; }
 
 	int getHand( int p_no ) { return hand_list[p_no].size(); }	//指定したプレイヤーのハンド（手札）数を得る
 	int getCardPosX( int hand_no ) { return image_x.at( hand_no ); }

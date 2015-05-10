@@ -33,12 +33,14 @@ void PlayerDataList::init()
 	
 }
 
-int PlayerDataList::checkStock( const int p_no, const int *symbol )
+bool PlayerDataList::isEnoughSymbol( const int p_no, SYMBOL_DATA* cost_data )
 {
-	for ( int i = 0; i<20; i++ ) {
-		if ( symbol[i] > pd[p_no].p_stock[i] ) return 0;
+	int count = 0;;
+	for ( auto cost : cost_data->symbol ) {
+		count++;
+		if ( cost > pd[p_no].p_stock.symbol[count] ) return false;
 	}
-	return 1;
+	return true;
 }
 
 void PlayerDataList::draw()
@@ -52,7 +54,7 @@ void PlayerDataList::draw()
 			//クレストプール表示
 			int px = PLAYER_DATA_X + 2;
 			for ( int j = 0; j < 20; j++ ) {
-				for ( int k = 0; k < pd[i].p_stock[j]; k++ ) {
+				for ( int k = 0; k < pd[i].p_stock.symbol[j]; k++ ) {
 					symbol_anim.draw( j, px, PLAYER_DATA_Y + 40 );
 					px += 32;
 				}

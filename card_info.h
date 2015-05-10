@@ -206,6 +206,12 @@ enum PHASE{
 
 };
 
+//コストデータ
+struct SYMBOL_DATA
+{
+	int symbol[20];	//[SUMMON] == 1で召喚紋章1必要
+};
+
 //一人のプレイヤーが持つデータ
 struct PlayerData{
 	std::string p_name;	//プレイヤーネーム
@@ -218,7 +224,7 @@ struct PlayerData{
 	//int deck_num;		//デッキ枚数
 	//int deck_all[60];	//デッキのカードナンバー
 	DICE_SYMBOL my_dice[3][6];	//マイダイス情報
-	int p_stock[20];	//ストック（p_stock[SUMMON]=5で召喚紋章5ストック）
+	SYMBOL_DATA p_stock;	//ストック（p_stock[SUMMON]=5で召喚紋章5ストック）
 public:
 	PlayerData(){	//プレイヤーデータ初期化
 		p_name = "NO NAME";
@@ -231,8 +237,8 @@ public:
 		//for(int i=0 ; i<60 ; i++ ){
 		//	deck_all[i] = -1;
 		//}
-		for(int i=0 ; i<20 ; i++ ){
-			p_stock[i] = 0;
+		for(int &cost : p_stock.symbol ){
+			cost = 0;
 		}
 	}
 };

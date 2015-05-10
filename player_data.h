@@ -13,9 +13,7 @@ const int PLAYER_DATA_SPACE = 96+16;	//プレイヤー情報の（上下）間隔
 
 class PlayerDataList{
 
-
 	static PlayerData pd[4];		//4P分のプレイヤーデータ
-	//DDDCard card_data;
 	static int player_pc;		//このPCを操作するプレイヤーナンバー
 	int name_fh;			//名前表示用フォントハンドル
 	int other_fh;
@@ -40,9 +38,9 @@ public:
 	static void damage( int pn, int damage){ pd[pn].p_life -= damage; }
 	static void heal( int pn, int heal){ pd[pn].p_life += heal; }
 
-	static void giveStock( int p_no, DICE_SYMBOL symbol ){ pd[p_no].p_stock[symbol]++; }		//クレストプールに紋章追加
-	static void expendStock( int p_no, DICE_SYMBOL symbol ){ pd[p_no].p_stock[symbol]--; }		//クレストプールから紋章消費
-	static int checkStock( const int p_no, const int *symbol );			//コストチェック関数。コストが足りていれば1を返す
+	static void giveStock( int p_no, DICE_SYMBOL symbol ){ pd[p_no].p_stock.symbol[symbol]++; }		//クレストプールに紋章追加
+	static void expendStock( int p_no, DICE_SYMBOL symbol ){ pd[p_no].p_stock.symbol[symbol]--; }		//クレストプールから紋章消費
+	static bool isEnoughSymbol( const int p_no, SYMBOL_DATA* cost );			//コストチェック関数。コストが足りていれば1を返す
 
 	static DICE_SYMBOL getMyDice(int pn, int dice, int men){ return pd[pn].my_dice[dice][men]; }
 
