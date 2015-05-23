@@ -20,11 +20,11 @@ int DDDMap::loadFiles() throw( ... )
 		else if ( chk >= 0 ) map_anim.setImage( MAP_TILE, chk );
 		else last++;
 	}
-	if ( map_anim.empty( MAP_WAY1 ) == 1 ) {
+	if ( map_anim.empty( MAP_WAY_GREEN ) == 1 ) {
 		DDDLoader::setLoadFile( "Media\\Graphic\\map_way1.bmp" );
 		chk = DDDLoader::getGraphHandle( "Media\\Graphic\\map_way1.bmp" );
 		if ( chk == -1 ) throw( -2 );
-		else if ( chk >= 0 ) map_anim.setImage( MAP_WAY1, chk );
+		else if ( chk >= 0 ) map_anim.setImage( MAP_WAY_GREEN, chk );
 		else last++;
 	}
 	if ( mini_map.empty() == 1 ) {
@@ -52,58 +52,73 @@ void DDDMap::init()
 	camera_data.ny = 0;
 	camera_data.enable_scroll = false;
 
-	map_data[0][1]   = MAP_WAY1;
-	map_data[1][1]   = MAP_WAY1;													//TODO: 削除
-	map_data[9][10]  = MAP_WAY1;													//テスト代入(X座標は右側なので注意)
-	map_data[10][10] = MAP_WAY1;
-	map_data[11][10] = MAP_WAY1;
-	map_data[12][10] = MAP_WAY1;
-	map_data[10][11] = MAP_WAY1;
-	map_data[10][9]  = MAP_WAY1;
-	map_data[0][9]   = MAP_WAY1;
+	map_data[0][1] = MAP_WAY_GREEN;
+	map_data[1][1] = MAP_WAY_GREEN;													//TODO: 削除
+	map_data[9][10] = MAP_WAY_GREEN;													//テスト代入(X座標は右側なので注意)
+	map_data[10][10] = MAP_WAY_GREEN;
+	map_data[11][10] = MAP_WAY_GREEN;
+	map_data[12][10] = MAP_WAY_GREEN;
+	map_data[10][11] = MAP_WAY_GREEN;
+	map_data[10][9] = MAP_WAY_GREEN;
+	map_data[0][9] = MAP_WAY_GREEN;
 
-	map_data[13][5]  = MAP_WAY1;
+	map_data[13][5] = MAP_WAY_GREEN;
 
 }
 
 void DDDMap::setPointXY( int mouse_x, int mouse_y )
 {
-	//ポインタ位置情報更新
+	// ポインタ位置情報更新
 	int cx = ( DDDMAP_W - 1 )*MAPTILE_HW - ( DDDMAP_H - 1 )*MAPTILE_HW - camera_data.nx;
 	int cy = ( DDDMAP_W - 1 )*MAPTILE_HH + ( DDDMAP_H - 1 )*MAPTILE_HH - camera_data.ny + MAPTILE_HH + MAPTILE_UPSPACE;
 	int tmp = (int)( MAPTILE_S * ( mouse_x - cx ) );
 	int tmp1 = -tmp + cy;
 	int tmp2 = tmp + cy - MAPTILE_H;
-	int tmp3 = tmp1;
-	int tmp4 = tmp2;
+	bool may_chx = false;	// 座標変わるかもフラグ
+	bool may_chy = false;
 
 	point_x = -1;
 	point_y = -1;
-	for ( int k = DDDMAP_H; k >= 0; k-- ) {
-		for ( int j = DDDMAP_W; j >= 0; j-- ) {
-			if ( k != DDDMAP_H && j != DDDMAP_W && map_data[k][j] != MAP_TILE ) {
-				cx = j*MAPTILE_HW - k*MAPTILE_HW - camera_data.nx;
-				cy = j*MAPTILE_HH + k*MAPTILE_HH - camera_data.ny + MAPTILE_HH + MAPTILE_UPSPACE;
-				if ( mouse_x > cx && mouse_x < cx + MAPTILE_W ) {
-					tmp3 -= 4;	//タイルが盛り上がっている文のpx数
-					tmp4 -= 4;	//TODO:定数化
-				} else {
-					continue;
+
+	if ( mouse_y >= tmp1 + MAPTILE_H ) {	// 下側へ範囲外かどうかのチェック
+		point_x = -1;
+	} else if ( mouse_y >= tmp2 + MAPTILE_H ) {
+		point_y = -1;
+	} else {
+		// X座標の決定（仮決定）
+		for ( int j = DDDMAP_W - 1; j >= 0; j-- ) {
+			if ( mouse_y >= tmp1 - ( DDDMAP_W - 1 - j ) * MAPTILE_H - MAP_WAY_UP_PIXEL ) {
+				if ( mouse_y < tmp1 - ( DDDMAP_W - 1 - j ) * MAPTILE_H ) {
+					may_chx = true;	// 座標位置がタイルの場合座標が変わる
 				}
-			}
-			if ( ( mouse_y >= tmp3 - ( DDDMAP_W - 1 - j ) * MAPTILE_H ) && ( mouse_y >= tmp4 - ( DDDMAP_H - 1 - k ) * MAPTILE_H ) ) {
 				point_x = j;
-				point_y = k;
-				k = 0;		//多重ループを抜ける為終了条件を偽装
 				break;
-			} else {
-				tmp3 = tmp1;
-				tmp4 = tmp2;
+			}
+		}
+		// Y座標の決定（仮決定）
+		for ( int k = DDDMAP_H - 1; k >= 0; k-- ) {
+			if ( mouse_y >= tmp2 - ( DDDMAP_H - 1 - k ) * MAPTILE_H - MAP_WAY_UP_PIXEL ) {
+				if ( mouse_y < tmp2 - ( DDDMAP_H - 1 - k ) * MAPTILE_H ) {
+					may_chy = true;	// 座標位置がタイルの場合座標が変わる
+				}
+				point_y = k;
+				break;
+			}
+		}
+
+		// 仮座標位置がタイルの場合、フラグによってマップ座標位置をずらす
+		if ( map_data[point_y][point_x] == MAP_TILE ) {
+			if ( may_chx ) {
+				point_x--;
+			}
+			if ( may_chy ) {
+				point_y--;
 			}
 		}
 	}
-	if ( point_x >= DDDMAP_W || point_y >= DDDMAP_H ) {
-		point_x = -1;		//下側にマップ外ならマップ外情報を入力
+	// マップ外ならマップ外情報を入力
+	if ( point_x < 0 || point_y < 0 ) {
+		point_x = -1;
 		point_y = -1;
 	}
 }

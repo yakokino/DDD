@@ -30,7 +30,9 @@ struct SYMBOL_DATA
 //マップデータ
 enum MAP_DATA{
 	MAP_TILE,
-	MAP_WAY1
+	MAP_WAY_RED,
+	MAP_WAY_GREEN,
+	MAP_WAY_BLUE
 
 };
 
@@ -224,8 +226,6 @@ struct PlayerData{
 	int last_time;		//残り時間(frame)
 	int hand;			//手札の枚数
 	int dust;			//捨て札の枚数
-	//int deck_num;		//デッキ枚数
-	//int deck_all[60];	//デッキのカードナンバー
 	DICE_SYMBOL my_dice[3][6];	//マイダイス情報
 	SYMBOL_DATA p_stock;	//ストック（p_stock[SUMMON]=5で召喚紋章5ストック）
 public:
@@ -236,10 +236,6 @@ public:
 		last_time = 60*60;
 		hand = 5;
 		dust = 0;
-		//deck_num = 0;
-		//for(int i=0 ; i<60 ; i++ ){
-		//	deck_all[i] = -1;
-		//}
 		for(int &cost : p_stock.symbol ){
 			cost = 0;
 		}

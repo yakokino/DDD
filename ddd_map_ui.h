@@ -8,12 +8,14 @@
 //マップサイズ
 const int DDDMAP_W = 20;	//マップの横マス数（左上から右下へ）
 const int DDDMAP_H = 20;	//マップの縦マス数
+//マップ画像サイズ
 const int MAPTILE_W = 96;
 const int MAPTILE_H = 48;
-const int MAPTILE_UPSPACE = 7;
+const int MAPTILE_UPSPACE = 7;	//マップタイル画像上部の画像がない部分のpixel数
 const double MAPTILE_S = 0.5;
 const int MAPTILE_HW = MAPTILE_W / 2;
 const int MAPTILE_HH = MAPTILE_H / 2;
+const int MAP_WAY_UP_PIXEL = 4;	//マップタイルでない場合の盛り上がっている分のpx数
 
 //UI関連
 const int DDDUI_ALPHA = 230;	//UI不透明度(0～255)

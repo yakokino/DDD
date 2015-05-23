@@ -197,7 +197,7 @@ void DDDCard::setCharactorMap( int x, int y, int spin, int num, ... )
 		break;
 	}
 	//キャラが最初に立っているマスを設置
-	card_info_data.map[cur_y][cur_x] = MAP_WAY1 + 1000;
+	card_info_data.map[cur_y][cur_x] = MAP_WAY_GREEN + 1000;
 	int p_x[5] = { -1, -1, -1, -1, -1 };		//分岐点登録用配列
 	int p_y[5] = { -1, -1, -1, -1, -1 };
 	for ( int i = 0; i < num; i++ ) {
@@ -232,7 +232,7 @@ void DDDCard::setCharactorMap( int x, int y, int spin, int num, ... )
 		}
 		//カーソルの位置に道追加
 		if ( cur_x >= 0 && cur_x < 5 && cur_y >= 0 && cur_y < 5 ) {
-			card_info_data.map[cur_y][cur_x] = MAP_WAY1;
+			card_info_data.map[cur_y][cur_x] = MAP_WAY_GREEN;
 		} else {
 			break;
 		}
