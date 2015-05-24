@@ -5,7 +5,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 	ActionData ad;
 	//(*cd).init();
 	ad.init();
-	(*cd).action_list.clear();
+	(*cd).skill_list.clear();
 	(*cd).card_no = card_no;
 	switch( card_no ){
 		case 2100:
@@ -20,7 +20,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.power = 1500;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 1;	ad.no_range = 0;	ad.t_type = ENEMY_SIMPLE;
 			ad.delay = 0;
-			(*cd).action_list.push_back( ad );
+			(*cd).skill_list.push_back( ad );
 			ad.init();
 			ad.skill_name = "クール・ボイス";
 			ad.skill_info = "自分含め、周囲3マス内の味方キャラの攻撃力を500上げる";
@@ -28,7 +28,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.power = 500;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 3;	ad.no_range = -1;	ad.t_type = FRIEND_ALL;
 			ad.delay = 0;
-			(*cd).action_list.push_back( ad );
+			(*cd).skill_list.push_back( ad );
 			ad.init();
 			ad.skill_name = "ハスキー・ボイス";
 			ad.skill_info = "周囲3マス内の敵キャラの攻撃力を1000下げる";
@@ -36,7 +36,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.power = 500;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 3;	ad.no_range = -1;	ad.t_type = FRIEND_ALL;
 			ad.delay = 0;
-			(*cd).action_list.push_back( ad );
+			(*cd).skill_list.push_back( ad );
 
 			(*cd).flavor_text = "「食べ物を粗末にしてはいけません！」";
 			break;
@@ -51,7 +51,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.power = 2000;		ad.combo = 1;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 2;	ad.no_range = 0;	ad.t_type = ENEMY_SIMPLE;
 			ad.delay = 0;
-			(*cd).action_list.push_back( ad );
+			(*cd).skill_list.push_back( ad );
 
 			(*cd).flavor_text = "「2000番カードですよっと」";
 
@@ -67,7 +67,7 @@ void DDDCard::getCardData( int card_no, CardData *cd){
 			ad.power = 2001;		ad.combo = 2;	ad.cstate = CSTATE_NORMAL;
 			ad.range = 1;	ad.no_range = 0;	ad.t_type = ENEMY_SIMPLE;
 			ad.delay = 0;
-			(*cd).action_list.push_back( ad );
+			(*cd).skill_list.push_back( ad );
 
 			(*cd).flavor_text = "「2001番カードですよっと」";
 

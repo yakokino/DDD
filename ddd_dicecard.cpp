@@ -130,6 +130,7 @@ void DDDCard::init()
 	over_card = -1;
 	card_info_no = -1;
 	select_card = -1;
+	mode = CARD_OPERATE_MODE_NO_OPERATE;
 	info_name_fh = CreateFontToHandle( "ＭＳ Ｐゴシック", 17, 10, DX_FONTTYPE_ANTIALIASING );
 	info_middle_fh = CreateFontToHandle( "ＭＳ Ｐゴシック", 16, 6, DX_FONTTYPE_ANTIALIASING );
 	info_small_fh = CreateFontToHandle( "ＭＳ Ｐゴシック", 12, 1, DX_FONTTYPE_ANTIALIASING );
@@ -240,32 +241,93 @@ void DDDCard::setCharactorMap( int x, int y, int spin, int num, ... )
 	va_end( list );
 }
 
+void DDDCard::setMode( CARD_OPERATE_MODE new_mode )
+{
+	if ( new_mode != mode ) {
+		initMode( new_mode );
+		mode = new_mode;
+	}
+}
+
+void DDDCard::initMode( CARD_OPERATE_MODE new_mode )
+{
+	auto mouse_data = DDDMouse::getMouseAct();
+
+	// モード終了時の処理
+	switch ( mode ) {
+	case CARD_OPERATE_MODE_NO_OPERATE:
+
+		break;
+	case CARD_OPERATE_MODE_MAIN_PHASE_SELECT_CARD:
+		DDDUI::deleteWindow( CARD_SUMMON_WINDOW );
+		select_card = -1;
+		break;
+	case CARD_OPERATE_MODE_ATTACK_PHASE:
+
+		break;
+	case CARD_OPERATE_MODE_END_PHASE:
+
+		break;
+	}
+	// モード開始時の処理
+	switch ( new_mode ) {
+	case CARD_OPERATE_MODE_NO_OPERATE:
+
+		break;
+	case CARD_OPERATE_MODE_MAIN_PHASE_SELECT_CARD:
+		DDDUI::createWindow( mouse_data->nx - 80, mouse_data->ny - 16*8, 160, 16*10, NORMAL_WINDOW, CARD_SUMMON_WINDOW );
+		select_card = over_card;		// 選択カードを代入
+		//DDDMouse::setCommand
+		break;
+	case CARD_OPERATE_MODE_ATTACK_PHASE:
+
+		break;
+	case CARD_OPERATE_MODE_END_PHASE:
+
+		break;
+	}
+}
+
 void DDDCard::mouseAction( MOUSE_ACTION_DATA* mouse_data )
 {
 	if ( mouse_data->command == HAND_CARD ) {
-		//カード関連
+		// 手札関連
 		over_card = mouse_data->command_no;
 		if ( mouse_data->action == OVER ) {
-			//手札にマウスオーバー
-			setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( mouse_data->command_no ) );	//カードインフォをセット
+			// 手札にマウスオーバー
+			setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( over_card ) );	//カードインフォをセット
 		} else if ( mouse_data->action == LEFT_CLICK ) {
-			//手札をクリック
-			if ( mouse_data->phase == MAIN_PHASE || mouse_data->phase == MAIN_PHASE2 ) {
-				if ( select_card != over_card ) {
-					select_card = over_card;		//選択カードを代入
-					if ( PlayerDataList::isEnoughSymbol( PlayerDataList::getPlayerPC(), &card_info_data.cost_data ) == 1 ) {
-						//コストが足りる場合
-						cost_enough = 1;
-					} else {
-						//コストが足りない場合
-						cost_enough = 0;
-					}
+			// 手札をクリック
+			if ( mode == CARD_OPERATE_MODE_NO_OPERATE ) {
+				if ( mouse_data->phase == MAIN_PHASE || mouse_data->phase == MAIN_PHASE2 ) {
+					setMode( CARD_OPERATE_MODE_MAIN_PHASE_SELECT_CARD );	// 操作モード変更
 				}
 			}
 		}
+
+	} else if ( mouse_data->command == CARD_SUMMON ) {
+		// 召喚コマンド関連
+		if ( mouse_data->action == OVER ) {
+			// 召喚コマンドにマウスオーバー
+
+		} else if ( mouse_data->action == LEFT_CLICK ) {
+			// 召喚コマンドクリック
+
+		}
+
 	} else {
+		// カード関連以外
 		over_card = -1;
-		select_card = -1;
+		if ( mouse_data->action == LEFT_CLICK ) {
+			// カード関連以外のコマンドをクリック
+			if ( mode == CARD_OPERATE_MODE_MAIN_PHASE_SELECT_CARD ) {
+				setMode( CARD_OPERATE_MODE_NO_OPERATE );
+			}
+		}
+	}
+
+	if ( mode == CARD_OPERATE_MODE_MAIN_PHASE_SELECT_CARD ) {
+		setCardInfo( hand_list[PlayerDataList::getPlayerPC()].at( select_card ) );
 	}
 
 }
@@ -341,9 +403,9 @@ void DDDCard::draw()
 		DrawStringToHandle( INFO_MAX_HP_X, INFO_LINE3, "/", 0, info_middle_fh );
 		DrawFormatStringToHandle( INFO_MAX_HP_X + 10, INFO_LINE3, 0, info_middle_fh, "%d", card_info_data.life );
 		//技コスト、技名、技説明表示
-		std::vector<ActionData>::iterator it = card_info_data.action_list.begin();
+		std::vector<ActionData>::iterator it = card_info_data.skill_list.begin();
 		int count = 0;
-		while ( it != card_info_data.action_list.end() ) {
+		while ( it != card_info_data.skill_list.end() ) {
 			//技コスト表示
 			c = 0;
 			for ( int one_cost : ( *it ).cost.symbol ) {

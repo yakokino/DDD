@@ -1,8 +1,9 @@
 #pragma once
 
 #include <list>
+#include "ddd_loader.h"
 #include "ddd_mouse.h"
-#include "card_info.h"
+//#include "card_info.h"
 #include "anim_sound.h"
 
 //マップサイズ
@@ -48,12 +49,10 @@ public:
 	int loadFiles() throw( ... );
 	void init();
 	void setPointXY( int mouse_x, int mouse_y );
-	int getPointX() { return point_x; }
-	int getPointY() { return point_y; }
 	void mouseAction( MOUSE_ACTION_DATA* mouse_data );
 
-	void setEnableScroll( bool enable_flag ) { camera_data.enable_scroll = enable_flag; }
-	CAMERA_DATA* getCameraData() { return &camera_data; }
+	void setEnableScroll( bool enable_flag );
+	CAMERA_DATA* getCameraData();
 
 	void draw();
 };
@@ -72,25 +71,27 @@ enum WINDOW_TYPE
 enum WINDOW_TAG
 {
 	DICE_ROLL_WINDOW,
-	YES_NO_WINDOW
+	YES_NO_WINDOW,
+	CARD_SUMMON_WINDOW
+
 };
 
+struct WINDOW_DATA
+{
+	int x, y, h_num, w_num;
+	WINDOW_TYPE type;
+	WINDOW_TAG tag;
+};
 
 class DDDUI
 {
-	struct WINDOW_DATA
-	{
-		int x, y, h_num, w_num;
-		WINDOW_TYPE type;
-		WINDOW_TAG tag;
-	};
-	std::vector<WINDOW_DATA> window_list;		//ウィンドウリスト
-	AnimDraw ui_anim;
-	AnimDraw window_anim;
+	static std::vector<WINDOW_DATA> window_list;		//ウィンドウリスト
+	static AnimDraw ui_anim;
+	static AnimDraw window_anim;
 
 public:
-	int loadFiles() throw( ... );
-	void createWindow( int x, int y, int w, int h, WINDOW_TYPE type, WINDOW_TAG tag );		//ウィンドウを生成する。16ドット単位でしかサイズが変化しない。/16切り捨て
-	void deleteWindow( WINDOW_TAG tag );										//ウィンドウを消去する
-	void draw( PHASE phase );
+	static int loadFiles() throw( ... );
+	static void createWindow( int x, int y, int w, int h, WINDOW_TYPE type, WINDOW_TAG tag );	//ウィンドウを生成する。16px単位でしかサイズが変化しない。切り捨て
+	static void deleteWindow( WINDOW_TAG tag );										//ウィンドウを消去する
+	static void draw( PHASE phase );
 };

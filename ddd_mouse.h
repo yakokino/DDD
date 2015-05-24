@@ -20,7 +20,9 @@ enum COMMAND
 	DICE_STOP,
 	HAND_CARD,
 	CARD_SELECT,
-	CARD_SUMMON,
+	CARD_SUMMON,	// カードの召喚
+	CARD_ACTIVE,	// カードの発動
+	CARD_DETAIL,	// カード詳細
 	ATTACK_PHASE_BUTTON,
 	MAIN_PHASE2_BUTTON,
 	END_PHASE_BUTTON
@@ -71,16 +73,16 @@ struct COMMAND_DATA
 
 class DDDMouse
 {
-	int click_x, click_y;			//クリック開始時の位置
-	int lclick_x, lclick_y;			//前フレームのマウス座標
-	int pressed_frames[3];			//それぞれのマウスボタンが押されているフレーム数
-	int mouse_wheel;				//マウスホイール回転量（前フレームとの差）
-	MOUSE_ACTION_DATA mouse_data;
+	static int click_x, click_y;			//クリック開始時の位置
+	static int lclick_x, lclick_y;			//前フレームのマウス座標
+	static int pressed_frames[3];			//それぞれのマウスボタンが押されているフレーム数
+	static int mouse_wheel;				//マウスホイール回転量（前フレームとの差）
+	static MOUSE_ACTION_DATA mouse_data;
 
-	std::vector<COMMAND_DATA> command_list;	//マウスで反応する位置とそのコマンドリスト
+	static std::vector<COMMAND_DATA> command_list;	//マウスで反応する位置とそのコマンドリスト
 
-	void checkCommand();	//ポインタ位置がマウス操作可能な位置かどうかを判定し、mouse_dataにcommand、noを代入
-	void checkMouseState();	//mouse_dataのactionなどを代入
+	static void checkCommand();	//マウス位置がマウス操作可能な位置かどうかを判定し、mouse_dataにcommand、noを代入
+	static void checkMouseState();	//mouse_dataのactionなどを代入
 
 public:
 	DDDMouse()
@@ -94,10 +96,10 @@ public:
 		mouse_data.push_command = NO_COMMAND;
 		mouse_data.push_no = 0;
 	}
-	void getInput();				//毎フレーム呼んでマウス入力情報を取得する関数
-	void setCommand( int x, int y, int w, int h, COMMAND com, int no = 0 );		//マウス操作できる位置を追加する
-	void getCommandPos( COMMAND com, int no, int *x, int *y );							//コマンドの位置を取得する
-	void setCommandPos( COMMAND com, int no, int x, int y );							//コマンドの位置をセット（変更）する
-	void deleteCommand( COMMAND com );											//コマンドを削除する
-	MOUSE_ACTION_DATA* getMouseAct() { return &mouse_data; }
+	static void getInput();				//毎フレーム呼んでマウス入力情報を取得する関数
+	static void setCommand( int x, int y, int w, int h, COMMAND com, int no = 0 );		//マウス操作できる位置を追加する
+	static void getCommandPos( COMMAND com, int no, int *x, int *y );							//コマンドの位置を取得する
+	static void setCommandPos( COMMAND com, int no, int x, int y );							//コマンドの位置をセット（変更）する
+	static void deleteCommand( COMMAND com );											//コマンドを削除する
+	static MOUSE_ACTION_DATA* getMouseAct() { return &mouse_data; }
 };

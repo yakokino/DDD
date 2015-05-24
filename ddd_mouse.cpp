@@ -1,5 +1,12 @@
 #include "ddd_mouse.h"
 
+int DDDMouse::click_x, DDDMouse::click_y;
+int DDDMouse::lclick_x, DDDMouse::lclick_y;
+int DDDMouse::pressed_frames[3];
+int DDDMouse::mouse_wheel;
+MOUSE_ACTION_DATA DDDMouse::mouse_data;
+std::vector<COMMAND_DATA> DDDMouse::command_list;
+
 void DDDMouse::getInput()
 {
 	GetMousePoint( &mouse_data.nx, &mouse_data.ny );					//ポインタ位置取得

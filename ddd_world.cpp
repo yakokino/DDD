@@ -252,9 +252,9 @@ void DDDWorld::draw()
 
 	ddd_map.draw();		//マップ表示
 	ddd_chara.draw( camera_data->nx, camera_data->ny );	//キャラ表示
-	ddd_ui.draw( phase );					//UI表示
 	player.draw();							//プレイヤー情報表示
 	ddd_card.draw();						//カード表示
+	ddd_ui.draw( phase );					//UI表示
 	ddd_dice.draw();						//ダイス表示
 
 	phase_frame++;

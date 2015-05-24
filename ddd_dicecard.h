@@ -1,10 +1,7 @@
 #pragma once
 
-#include "ddd_mouse.h"
-#include "card_info.h"
-#include "anim_sound.h"
-#include "ddd_loader.h"
 #include "player_data.h"
+#include "ddd_map_ui.h"
 
 
 class DDDDice
@@ -68,9 +65,8 @@ const int INFO_FLAVOR_Y = 580;
 enum CARD_OPERATE_MODE
 {
 	CARD_OPERATE_MODE_NO_OPERATE,
-	CARD_OPERATE_MODE_MAIN_PHASE,
+	CARD_OPERATE_MODE_MAIN_PHASE_SELECT_CARD,
 	CARD_OPERATE_MODE_ATTACK_PHASE,
-	CARD_OPERATE_MODE_MAIN_PHASE_2,
 	CARD_OPERATE_MODE_END_PHASE
 };
 
@@ -89,7 +85,7 @@ struct CardData
 	int defense;				// 防御力
 	M_TYPE m_type;				// 移動タイプ
 	int speed;					// 移動量
-	std::vector<ActionData> action_list;	// 行動データリスト
+	std::vector<ActionData> skill_list;	// スキルデータリスト
 	std::string flavor_text;	// フレーバーテクスト
 
 	CardData()
@@ -124,7 +120,8 @@ class DDDCard
 	CardData card_info_data;			// カードインフォのカードデータ
 
 	CARD_OPERATE_MODE mode;				// 操作モード
-	int select_card;
+
+	int select_card;					// 選択カードハンドナンバー
 	int cost_enough;					// 表示用（コストが足りている場合に1が入る）
 
 	AnimDraw mini_symbol;
@@ -133,6 +130,9 @@ class DDDCard
 	int info_middle_fh;
 	int info_small_fh;
 	int info_mini_fh;
+
+	void initMode( CARD_OPERATE_MODE new_mode );
+
 public:
 	int loadFiles() throw( ... );
 	void init();
@@ -141,7 +141,7 @@ public:
 	void drawCard( int p_no );					// 指定したプレイヤーがデッキからカードを1枚ドローする
 	void setCardInfo( int card_no );
 	void setCharactorMap( int x, int y, int spin, int num, ... );
-	void setOperate( CARD_OPERATE_MODE new_mode ) { mode = new_mode; }
+	void setMode( CARD_OPERATE_MODE new_mode );
 
 	int getHand( int p_no ) { return hand_list[p_no].size(); }	// 指定したプレイヤーのハンド（手札）数を得る
 	int getCardPosX( int hand_no ) { return image_x.at( hand_no ); }
