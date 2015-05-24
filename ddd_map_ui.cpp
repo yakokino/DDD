@@ -259,42 +259,43 @@ void DDDUI::draw( PHASE phase )
 	}
 
 	SetDrawBlendMode( DX_BLENDMODE_ALPHA, 150 );
-	//ウィンドウリスト表示
+	// ウィンドウリスト表示
 	std::vector<WINDOW_DATA>::iterator it = window_list.begin();
 	for ( it = window_list.begin(); it != window_list.end(); it++ ) {
+		// ウィンドウ表示
 		for ( int i = 0; i < ( *it ).h_num; i++ ) {
 			for ( int j = 0; j < ( *it ).w_num; j++ ) {
 				if ( i == 0 ) {
 					if ( j == 0 ) {
-						window_anim.draw( 3, ( *it ).x, ( *it ).y );						//左上表示
+						window_anim.draw( 3, ( *it ).x, ( *it ).y );						// 左上表示
 						window_anim.draw( 0, ( *it ).x, ( *it ).y );
 					} else if ( j == ( *it ).w_num - 1 ) {
-						window_anim.draw( 5, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y );	//右上表示
+						window_anim.draw( 5, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y );	// 右上表示
 						window_anim.draw( 2, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y );
 					} else {
-						window_anim.draw( 4, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y );	//上表示
+						window_anim.draw( 4, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y );	// 上表示
 						window_anim.draw( 1, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y );
 					}
 
 				} else if ( i == ( *it ).h_num - 1 ) {
 					if ( j == 0 ) {
-						window_anim.draw( 15, ( *it ).x, ( *it ).y + i * WINDOW_GRAPH_H );	//左下表示
+						window_anim.draw( 15, ( *it ).x, ( *it ).y + i * WINDOW_GRAPH_H );	// 左下表示
 						window_anim.draw( 12, ( *it ).x, ( *it ).y + i * WINDOW_GRAPH_H );
 					} else if ( j == ( *it ).w_num - 1 ) {
-						window_anim.draw( 17, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );//右下表示
+						window_anim.draw( 17, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );// 右下表示
 						window_anim.draw( 14, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );
 					} else {
-						window_anim.draw( 16, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );//下表示
+						window_anim.draw( 16, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );// 下表示
 						window_anim.draw( 13, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );
 					}
 				} else if ( j == 0 ) {
-					window_anim.draw( 9, ( *it ).x, ( *it ).y + i * WINDOW_GRAPH_H );						//左表示
+					window_anim.draw( 9, ( *it ).x, ( *it ).y + i * WINDOW_GRAPH_H );						// 左表示
 					window_anim.draw( 6, ( *it ).x, ( *it ).y + i * WINDOW_GRAPH_H );
 				} else if ( j == ( *it ).w_num - 1 ) {
-					window_anim.draw( 11, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );	//右表示
+					window_anim.draw( 11, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );	// 右表示
 					window_anim.draw( 8, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );
 				} else {
-					window_anim.draw( 10, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );	//中表示
+					window_anim.draw( 10, ( *it ).x + j * WINDOW_GRAPH_W, ( *it ).y + i * WINDOW_GRAPH_H );	// 中表示
 				}
 
 			}

@@ -90,7 +90,7 @@ class DDDUI
 
 public:
 	int loadFiles() throw( ... );
-	void createWindow( int x, int y, int w, int h, WINDOW_TYPE type, WINDOW_TAG tag );		//ウィンドウを生成する
+	void createWindow( int x, int y, int w, int h, WINDOW_TYPE type, WINDOW_TAG tag );		//ウィンドウを生成する。16ドット単位でしかサイズが変化しない。/16切り捨て
 	void deleteWindow( WINDOW_TAG tag );										//ウィンドウを消去する
 	void draw( PHASE phase );
 };
